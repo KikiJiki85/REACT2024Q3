@@ -1,0 +1,8 @@
+{
+  "extends": "react-app",
+  "rules": {
+    "@typescript-eslint/no-explicit-any": "error",
+    "react-compiler/react-compiler": "error"
+  },
+  "plugins": ["react-compiler"]
+}
