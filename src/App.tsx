@@ -2,9 +2,18 @@ import { Component } from "react";
 import SearchBar from "./components/SearchBar";
 import SearchResults from "./components/SearchResult";
 
+interface Character {
+    name: string;
+    uid: string;
+}
+
+interface ApiResponse {
+    characters: Character[];
+}
+
 interface AppState {
     searchTerm: string;
-    results: Array<{ name: string; description: string }>;
+    results: { name: string; description: string }[];
 }
 
 class App extends Component<{}, AppState> {
@@ -41,11 +50,13 @@ class App extends Component<{}, AppState> {
                 body: formData.toString(),
             })
                 .then(response => response.json())
-                .then(data => {
-                    const results = data.characters.map((character: any) => ({
-                        name: character.name,
-                        description: character.uid,
-                    }));
+                .then((data: ApiResponse) => {
+                    const results = data.characters.map(
+                        (character: Character) => ({
+                            name: character.name,
+                            description: character.uid,
+                        }),
+                    );
                     this.setState({ results });
                 })
                 .catch(error => console.error("Error fetching data:", error));
@@ -57,11 +68,13 @@ class App extends Component<{}, AppState> {
                 },
             })
                 .then(response => response.json())
-                .then(data => {
-                    const results = data.characters.map((character: any) => ({
-                        name: character.name,
-                        description: character.uid,
-                    }));
+                .then((data: ApiResponse) => {
+                    const results = data.characters.map(
+                        (character: Character) => ({
+                            name: character.name,
+                            description: character.uid,
+                        }),
+                    );
                     this.setState({ results });
                 })
                 .catch(error => console.error("Error fetching data:", error));
