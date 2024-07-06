@@ -41,6 +41,7 @@ class App extends Component<{}, AppState> {
 
     fetchAllCharacters = () => {
         this.setState({ isLoading: true });
+
         fetch("https://stapi.co/api/v1/rest/character/search", {
             method: "GET",
         })
@@ -59,6 +60,7 @@ class App extends Component<{}, AppState> {
         const formData = new URLSearchParams();
         formData.append("name", name);
 
+        this.setState({ isLoading: true });
         fetch(`https://stapi.co/api/v1/rest/character/search/`, {
             method: "POST",
             headers: {
@@ -96,7 +98,7 @@ class App extends Component<{}, AppState> {
     };
 
     render() {
-        const { searchTerm, results } = this.state;
+        const { searchTerm, results, isLoading } = this.state;
 
         return (
             <div
@@ -113,7 +115,7 @@ class App extends Component<{}, AppState> {
                     />
                 </div>
                 <div style={{ flex: "4", overflowY: "scroll" }}>
-                    <SearchResults results={results} />
+                    <SearchResults results={results} isLoading={isLoading} />
                 </div>
             </div>
         );
