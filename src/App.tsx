@@ -1,5 +1,6 @@
 import { Component } from "react";
 import SearchBar from "./components/SearchBar";
+import SearchResults from "./components/SearchResult";
 
 interface AppState {
     searchTerm: string;
@@ -27,14 +28,44 @@ class App extends Component<{}, AppState> {
     fetchResults = () => {
         const { searchTerm } = this.state;
         const trimmedSearchTerm = searchTerm.trim();
-        const apiUrl = trimmedSearchTerm
-            ? `https://stapi.co/api/v1/rest/character/search?name=${trimmedSearchTerm}`
-            : `https://stapi.co/api/v1/rest/character/search`;
 
-        fetch(apiUrl)
-            .then(response => response.json())
-            .then(data => this.setState({ results: data.items }))
-            .catch(error => console.error("Error fetching data:", error));
+        if (trimmedSearchTerm) {
+            const formData = new URLSearchParams();
+            formData.append("name", trimmedSearchTerm);
+
+            fetch(`https://stapi.co/api/v1/rest/character/search/`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: formData.toString(),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    const results = data.characters.map((character: any) => ({
+                        name: character.name,
+                        description: character.uid,
+                    }));
+                    this.setState({ results });
+                })
+                .catch(error => console.error("Error fetching data:", error));
+        } else {
+            fetch("https://stapi.co/api/v1/rest/character/search", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+                .then(response => response.json())
+                .then(data => {
+                    const results = data.characters.map((character: any) => ({
+                        name: character.name,
+                        description: character.uid,
+                    }));
+                    this.setState({ results });
+                })
+                .catch(error => console.error("Error fetching data:", error));
+        }
     };
 
     handleSearch = (term: string) => {
@@ -44,7 +75,7 @@ class App extends Component<{}, AppState> {
     };
 
     render() {
-        const { searchTerm } = this.state;
+        const { searchTerm, results } = this.state;
 
         return (
             <div
@@ -59,6 +90,9 @@ class App extends Component<{}, AppState> {
                         searchTerm={searchTerm}
                         onSearch={this.handleSearch}
                     />
+                </div>
+                <div style={{ flex: "4", overflowY: "scroll" }}>
+                    <SearchResults results={results} />
                 </div>
             </div>
         );
