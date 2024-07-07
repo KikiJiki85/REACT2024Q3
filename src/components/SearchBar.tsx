@@ -17,6 +17,12 @@ class SearchBar extends Component<SearchBarProps, SearchBarState> {
         };
     }
 
+    componentDidUpdate(prevProps: SearchBarProps) {
+        if (prevProps.searchTerm !== this.props.searchTerm) {
+            this.setState({ input: this.props.searchTerm });
+        }
+    }
+
     handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         this.setState({ input: event.target.value });
     };
