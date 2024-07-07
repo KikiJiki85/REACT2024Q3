@@ -1,6 +1,7 @@
 import { Component } from "react";
 import SearchBar from "./components/SearchBar";
 import SearchResults from "./components/SearchResult";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 interface Character {
     name: string;
@@ -101,23 +102,28 @@ class App extends Component<{}, AppState> {
         const { searchTerm, results, isLoading } = this.state;
 
         return (
-            <div
-                style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    height: "100vh",
-                }}
-            >
-                <div style={{ flex: "1", borderBottom: "1px solid black" }}>
-                    <SearchBar
-                        searchTerm={searchTerm}
-                        onSearch={this.handleSearch}
-                    />
+            <ErrorBoundary>
+                <div
+                    style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        height: "100vh",
+                    }}
+                >
+                    <div style={{ flex: "1", borderBottom: "1px solid black" }}>
+                        <SearchBar
+                            searchTerm={searchTerm}
+                            onSearch={this.handleSearch}
+                        />
+                    </div>
+                    <div style={{ flex: "4", overflowY: "scroll" }}>
+                        <SearchResults
+                            results={results}
+                            isLoading={isLoading}
+                        />
+                    </div>
                 </div>
-                <div style={{ flex: "4", overflowY: "scroll" }}>
-                    <SearchResults results={results} isLoading={isLoading} />
-                </div>
-            </div>
+            </ErrorBoundary>
         );
     }
 }
