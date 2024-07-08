@@ -2,15 +2,7 @@ import { Component } from "react";
 import SearchBar from "./components/SearchBar";
 import SearchResults from "./components/SearchResult";
 import ErrorBoundary from "./components/ErrorBoundary";
-
-interface Character {
-    name: string;
-    uid: string;
-}
-
-interface ApiResponse {
-    characters: Character[];
-}
+import { fetchResults } from "./api/api";
 
 interface AppState {
     searchTerm: string;
@@ -33,69 +25,23 @@ class App extends Component<{}, AppState> {
 
         if (savedSearchTerm) {
             this.setState({ searchTerm: savedSearchTerm }, () => {
-                this.fetchResults(savedSearchTerm);
+                fetchResults(savedSearchTerm, this.updateState);
             });
         } else {
-            this.fetchResults("");
+            fetchResults("", this.updateState);
         }
     }
-
-    fetchAllCharacters = () => {
-        this.setState({ isLoading: true });
-
-        fetch("https://stapi.co/api/v1/rest/character/search", {
-            method: "GET",
-        })
-            .then(response => response.json())
-            .then((data: ApiResponse) => {
-                const results = data.characters.map((character: Character) => ({
-                    name: character.name,
-                    description: character.uid,
-                }));
-                this.setState({ results, isLoading: false });
-            })
-            .catch(error => console.error("Error fetching data:", error));
-    };
-
-    fetchCharactersByName = (name: string) => {
-        const formData = new URLSearchParams();
-        formData.append("name", name);
-
-        this.setState({ isLoading: true });
-        fetch(`https://stapi.co/api/v1/rest/character/search/`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-            },
-            body: formData.toString(),
-        })
-            .then(response => response.json())
-            .then((data: ApiResponse) => {
-                const results = data.characters.map((character: Character) => ({
-                    name: character.name,
-                    description: character.uid,
-                }));
-                this.setState({ results, isLoading: false });
-            })
-            .catch(error => console.error("Error fetching data:", error));
-    };
-
-    fetchResults = (searchTerm: string) => {
-        const trimmedSearchTerm = searchTerm.trim();
-
-        if (trimmedSearchTerm) {
-            this.fetchCharactersByName(trimmedSearchTerm);
-        } else {
-            this.fetchAllCharacters();
-        }
-    };
 
     handleSearch = (term: string) => {
         const trimmedTerm = term.trim();
         localStorage.setItem("searchTerm", trimmedTerm);
         this.setState({ searchTerm: trimmedTerm }, () => {
-            this.fetchResults(trimmedTerm);
+            fetchResults(trimmedTerm, this.updateState);
         });
+    };
+
+    updateState = (state: Partial<AppState>) => {
+        this.setState(state as Pick<AppState, keyof AppState>);
     };
 
     render() {
