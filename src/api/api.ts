@@ -1,60 +1,21 @@
-type Character = {
-  name: string;
-  uid: string;
-};
+import { ApiResponse, Character } from './types';
 
-type ApiResponse = {
-  characters: Character[];
-};
+const API = 'https://swapi.dev/api/people';
 
-const fetchAllCharacters = (
+const getDataFromAPI = (
+  query: string,
   setState: (state: {
     isLoading: boolean;
     results?: { name: string; description: string }[];
   }) => void,
 ) => {
   setState({ isLoading: true });
-
-  fetch('https://stapi.co/api/v1/rest/character/search', {
-    method: 'GET',
-  })
+  fetch(`${API}?search=${query}&page=1`)
     .then(response => response.json())
     .then((data: ApiResponse) => {
-      const results = data.characters.map((character: Character) => ({
+      const results = data.results.map((character: Character) => ({
         name: character.name,
-        description: character.uid,
-      }));
-      setState({ results, isLoading: false });
-    })
-    .catch(error => {
-      console.error('Error fetching data:', error);
-      setState({ isLoading: false });
-    });
-};
-
-const fetchCharactersByName = (
-  name: string,
-  setState: (state: {
-    isLoading: boolean;
-    results?: { name: string; description: string }[];
-  }) => void,
-) => {
-  const formData = new URLSearchParams();
-  formData.append('name', name);
-
-  setState({ isLoading: true });
-  fetch(`https://stapi.co/api/v1/rest/character/search/`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: formData.toString(),
-  })
-    .then(response => response.json())
-    .then((data: ApiResponse) => {
-      const results = data.characters.map((character: Character) => ({
-        name: character.name,
-        description: character.uid,
+        description: character.birth_year,
       }));
       setState({ results, isLoading: false });
     })
@@ -74,9 +35,9 @@ const fetchResults = (
   const trimmedSearchTerm = searchTerm.trim();
 
   if (trimmedSearchTerm) {
-    fetchCharactersByName(trimmedSearchTerm, setState);
+    getDataFromAPI(trimmedSearchTerm, setState);
   } else {
-    fetchAllCharacters(setState);
+    getDataFromAPI('', setState);
   }
 };
 
