@@ -1,0 +1,10 @@
+.error-block {
+  display: flex;
+  flex-direction: column;
+}
+
+.error-block__btn {
+  align-self: center;
+  cursor: pointer;
+  padding: 5px 10px;
+}

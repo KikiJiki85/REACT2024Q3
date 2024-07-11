@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import SearchBar from './components/SearchBar';
-import SearchResults from './components/SearchResult';
-import ErrorBoundary from './components/ErrorBoundary';
+import SearchBar from './components/SearchBar/SearchBar';
+import SearchResult from './components/SearchResult/SearchResult';
+import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 import { fetchResults } from './api/api';
 import useSearchTerm from './useSearchTerm';
 
@@ -46,7 +46,7 @@ const App: React.FC = () => {
           <SearchBar searchTerm={searchTerm} onSearch={handleSearch} />
         </div>
         <div style={{ flex: '4', overflowY: 'scroll' }}>
-          <SearchResults results={results} isLoading={isLoading} />
+          <SearchResult results={results} isLoading={isLoading} />
         </div>
       </div>
     </ErrorBoundary>

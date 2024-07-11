@@ -1,9 +1,5 @@
 import { useEffect, useState, ChangeEvent } from 'react';
-
-interface SearchBarProps {
-  searchTerm: string;
-  onSearch: (term: string) => void;
-}
+import { SearchBarProps } from './types';
 
 const SearchBar: React.FC<SearchBarProps> = ({ searchTerm, onSearch }) => {
   const [input, setInput] = useState(searchTerm);

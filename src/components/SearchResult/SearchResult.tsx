@@ -1,14 +1,8 @@
 import React from 'react';
+import { SearchResultProps } from './types';
+import styles from './SearchResult.module.css';
 
-interface SearchResultsProps {
-  results: Array<{ name: string; description: string }>;
-  isLoading: boolean;
-}
-
-const SearchResults: React.FC<SearchResultsProps> = ({
-  results,
-  isLoading,
-}) => {
+const SearchResult: React.FC<SearchResultProps> = ({ results, isLoading }) => {
   if ((!results || results.length === 0) && !isLoading) {
     return <div>No results found.</div>;
   }
@@ -16,7 +10,7 @@ const SearchResults: React.FC<SearchResultsProps> = ({
   return (
     <>
       {isLoading ? (
-        <div>
+        <div className={styles['search-result']}>
           <img src="/src/assets/loader.gif" alt="Loading..." />
         </div>
       ) : (
@@ -31,4 +25,4 @@ const SearchResults: React.FC<SearchResultsProps> = ({
   );
 };
 
-export default SearchResults;
+export default SearchResult;

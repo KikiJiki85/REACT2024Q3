@@ -1,13 +1,7 @@
-import { Component, ErrorInfo, ReactNode } from 'react';
-import FallbackUI from './FallbackUi';
-
-interface ErrorBoundaryProps {
-  children: ReactNode;
-}
-
-interface ErrorBoundaryState {
-  hasError: boolean;
-}
+import { Component, ErrorInfo } from 'react';
+import FallbackUi from '../FallbackUi/FallbackUi';
+import { ErrorBoundaryProps, ErrorBoundaryState } from './types';
+import styles from './ErrorBoundary.module.css';
 
 class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props: ErrorBoundaryProps) {
@@ -39,15 +33,15 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   render() {
     if (this.state.hasError) {
       return (
-        <FallbackUI message="Something went wrong." onClose={this.closeModal} />
+        <FallbackUi message="Something went wrong." onClose={this.closeModal} />
       );
     }
 
     return (
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
+      <div className={styles['error-block']}>
         <button
           onClick={this.throwError}
-          style={{ alignSelf: 'center', padding: '5px 10px' }}
+          className={styles['error-block__btn']}
         >
           Throw Error
         </button>
