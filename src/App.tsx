@@ -6,15 +6,17 @@ import { fetchResults } from './api/api';
 import useSearchTerm from './useSearchTerm';
 
 const App: React.FC = () => {
-  const [searchTerm, setSearchTerm] = useSearchTerm('');
+  const [searchTerm, setSearchTerm, isInitialized] = useSearchTerm('');
   const [results, setResults] = useState<
     { name: string; description: string }[]
   >([]);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    fetchResults(searchTerm, updateState);
-  }, [searchTerm]);
+    if (isInitialized) {
+      fetchResults(searchTerm || '', updateState);
+    }
+  }, [searchTerm, isInitialized]);
 
   const handleSearch = (term: string) => {
     const trimmedTerm = term.trim();
@@ -43,7 +45,7 @@ const App: React.FC = () => {
         }}
       >
         <div style={{ flex: '1', borderBottom: '1px solid black' }}>
-          <SearchBar searchTerm={searchTerm} onSearch={handleSearch} />
+          <SearchBar searchTerm={searchTerm || ''} onSearch={handleSearch} />
         </div>
         <div style={{ flex: '4', overflowY: 'scroll' }}>
           <SearchResult results={results} isLoading={isLoading} />
