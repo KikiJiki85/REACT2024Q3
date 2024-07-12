@@ -15,9 +15,9 @@ const SearchResult: React.FC<SearchResultProps> = ({ results, isLoading }) => {
         </div>
       ) : (
         results.map((result, index) => (
-          <div key={index}>
+          <div key={index} className={styles['search-result__item']}>
             <h3>{result.name}</h3>
-            <p>{result.description}</p>
+            <p>Year of birth: {result.description}</p>
           </div>
         ))
       )}

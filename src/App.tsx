@@ -4,6 +4,7 @@ import SearchResult from './components/SearchResult/SearchResult';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 import { fetchResults } from './api/api';
 import useSearchTerm from './useSearchTerm';
+import styles from './App.module.css';
 
 const App: React.FC = () => {
   const [searchTerm, setSearchTermAndSave, isInitialized] = useSearchTerm('');
@@ -36,17 +37,11 @@ const App: React.FC = () => {
 
   return (
     <ErrorBoundary>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          height: '100vh',
-        }}
-      >
-        <div style={{ flex: '1', borderBottom: '1px solid black' }}>
+      <div className={styles.app}>
+        <div className={styles['app__serch-bar']}>
           <SearchBar searchTerm={searchTerm || ''} onSearch={handleSearch} />
         </div>
-        <div style={{ flex: '4', overflowY: 'scroll' }}>
+        <div className={styles['app__search-result']}>
           <SearchResult results={results} isLoading={isLoading} />
         </div>
       </div>

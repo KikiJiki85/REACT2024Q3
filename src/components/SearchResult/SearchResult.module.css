@@ -3,3 +3,14 @@
   align-items: center;
   justify-content: center;
 }
+
+.search-result__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  cursor: pointer;
+  border: 1px solid black;
+  border-radius: 10px;
+}
