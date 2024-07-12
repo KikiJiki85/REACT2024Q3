@@ -8,6 +8,7 @@ const getDataFromAPI = (
   setState: (state: {
     isLoading: boolean;
     results?: { name: string; description: string }[];
+    totalPages?: number;
   }) => void,
 ) => {
   setState({ isLoading: true });
@@ -17,8 +18,10 @@ const getDataFromAPI = (
       const results = data.results.map((character: Character) => ({
         name: character.name,
         description: character.birth_year,
+        id: character.url.split('/').filter(Boolean).pop() || '',
       }));
-      setState({ results, isLoading: false });
+      const totalPages = Math.ceil(data.count / 10);
+      setState({ results, isLoading: false, totalPages });
     })
     .catch(error => {
       console.error('Error fetching data:', error);
@@ -31,6 +34,7 @@ const fetchResults = (
   setState: (state: {
     isLoading: boolean;
     results?: { name: string; description: string }[];
+    totalPages?: number;
   }) => void,
   page: number = 1,
 ) => {

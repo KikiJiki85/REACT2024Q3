@@ -12,6 +12,7 @@ const App: React.FC = () => {
   const { page } = useParams<{ page: string }>();
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState<number>(parseInt(page ?? '1'));
+  const [totalPages, setTotalPages] = useState<number>(0);
   const [searchTerm, setSearchTermAndSave, isInitialized] = useSearchTerm('');
   const [results, setResults] = useState<
     { name: string; description: string }[]
@@ -39,10 +40,12 @@ const App: React.FC = () => {
     state: Partial<{
       results: { name: string; description: string }[];
       isLoading: boolean;
+      totalPages: number;
     }>,
   ) => {
     if (state.results) setResults(state.results);
     if (state.isLoading !== undefined) setIsLoading(state.isLoading);
+    if (state.totalPages !== undefined) setTotalPages(state.totalPages);
   };
 
   return (
@@ -53,11 +56,12 @@ const App: React.FC = () => {
         </div>
         <div className={styles['app__search-result']}>
           <SearchResult results={results} isLoading={isLoading} />
-          <Pagination
-            currentPage={currentPage}
-            onPageChange={handlePageChange}
-          />
         </div>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
       </div>
     </ErrorBoundary>
   );
