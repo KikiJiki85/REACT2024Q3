@@ -4,13 +4,14 @@ const API = 'https://swapi.dev/api/people';
 
 const getDataFromAPI = (
   query: string,
+  page: number,
   setState: (state: {
     isLoading: boolean;
     results?: { name: string; description: string }[];
   }) => void,
 ) => {
   setState({ isLoading: true });
-  fetch(`${API}?search=${query}&page=1`)
+  fetch(`${API}?search=${query}&page=${page}`)
     .then(response => response.json())
     .then((data: ApiResponse) => {
       const results = data.results.map((character: Character) => ({
@@ -31,13 +32,14 @@ const fetchResults = (
     isLoading: boolean;
     results?: { name: string; description: string }[];
   }) => void,
+  page: number = 1,
 ) => {
   const trimmedSearchTerm = searchTerm.trim();
 
   if (trimmedSearchTerm) {
-    getDataFromAPI(trimmedSearchTerm, setState);
+    getDataFromAPI(trimmedSearchTerm, page, setState);
   } else {
-    getDataFromAPI('', setState);
+    getDataFromAPI('', page, setState);
   }
 };
 

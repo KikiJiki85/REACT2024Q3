@@ -1,13 +1,17 @@
 import { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import SearchBar from './components/SearchBar/SearchBar';
 import SearchResult from './components/SearchResult/SearchResult';
-// import Pagination from './components/Pagination/Pagination';
+import Pagination from './components/Pagination/Pagination';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 import { fetchResults } from './api/api';
 import useSearchTerm from './useSearchTerm';
 import styles from './App.module.css';
 
 const App: React.FC = () => {
+  const { page } = useParams<{ page: string }>();
+  const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState<number>(parseInt(page ?? '1'));
   const [searchTerm, setSearchTermAndSave, isInitialized] = useSearchTerm('');
   const [results, setResults] = useState<
     { name: string; description: string }[]
@@ -16,14 +20,19 @@ const App: React.FC = () => {
 
   useEffect(() => {
     if (isInitialized) {
-      fetchResults(searchTerm || '', updateState);
+      fetchResults(searchTerm || '', updateState, currentPage);
     }
-  }, [searchTerm, isInitialized]);
+  }, [searchTerm, isInitialized, currentPage]);
 
   const handleSearch = (term: string) => {
     const trimmedTerm = term.trim();
     setSearchTermAndSave(trimmedTerm);
     fetchResults(trimmedTerm, updateState);
+  };
+
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
+    navigate(`/search/${newPage}`);
   };
 
   const updateState = (
@@ -44,10 +53,10 @@ const App: React.FC = () => {
         </div>
         <div className={styles['app__search-result']}>
           <SearchResult results={results} isLoading={isLoading} />
-          {/* <Pagination
-          // currentPage={currentPage}
-          // onPageChange={handlePageChange}
-          /> */}
+          <Pagination
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+          />
         </div>
       </div>
     </ErrorBoundary>
