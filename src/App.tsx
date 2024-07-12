@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import SearchBar from './components/SearchBar/SearchBar';
 import SearchResult from './components/SearchResult/SearchResult';
+// import Pagination from './components/Pagination/Pagination';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 import { fetchResults } from './api/api';
 import useSearchTerm from './useSearchTerm';
@@ -43,6 +44,10 @@ const App: React.FC = () => {
         </div>
         <div className={styles['app__search-result']}>
           <SearchResult results={results} isLoading={isLoading} />
+          {/* <Pagination
+          // currentPage={currentPage}
+          // onPageChange={handlePageChange}
+          /> */}
         </div>
       </div>
     </ErrorBoundary>
