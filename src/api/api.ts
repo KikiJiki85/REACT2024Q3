@@ -35,10 +35,8 @@ const fetchResults = (
   const trimmedSearchTerm = searchTerm.trim();
 
   if (trimmedSearchTerm) {
-    console.log(trimmedSearchTerm);
     getDataFromAPI(trimmedSearchTerm, setState);
   } else {
-    console.log('No search term provided');
     getDataFromAPI('', setState);
   }
 };

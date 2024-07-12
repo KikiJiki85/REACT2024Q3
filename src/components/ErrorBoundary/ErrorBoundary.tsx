@@ -37,17 +37,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
       );
     }
 
-    return (
-      <div className={styles['error-block']}>
-        <button
-          onClick={this.throwError}
-          className={styles['error-block__btn']}
-        >
-          Throw Error
-        </button>
-        {this.props.children}
-      </div>
-    );
+    return <div className={styles['error-block']}>{this.props.children}</div>;
   }
 }
 

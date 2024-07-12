@@ -6,7 +6,7 @@ import { fetchResults } from './api/api';
 import useSearchTerm from './useSearchTerm';
 
 const App: React.FC = () => {
-  const [searchTerm, setSearchTerm, isInitialized] = useSearchTerm('');
+  const [searchTerm, setSearchTermAndSave, isInitialized] = useSearchTerm('');
   const [results, setResults] = useState<
     { name: string; description: string }[]
   >([]);
@@ -20,8 +20,7 @@ const App: React.FC = () => {
 
   const handleSearch = (term: string) => {
     const trimmedTerm = term.trim();
-    setSearchTerm(trimmedTerm);
-    setIsLoading(true);
+    setSearchTermAndSave(trimmedTerm);
     fetchResults(trimmedTerm, updateState);
   };
 
