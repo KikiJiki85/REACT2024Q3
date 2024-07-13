@@ -41,6 +41,10 @@ const App: React.FC = () => {
     navigate(`/search/${currentPage}/details/${id}`);
   };
 
+  const closeDetails = () => {
+    navigate(`/search/${currentPage}`);
+  };
+
   const updateState = (
     state: Partial<{
       results: { name: string; description: string; id: string }[];
@@ -74,7 +78,7 @@ const App: React.FC = () => {
           />
         </div>
 
-        <Outlet />
+        <Outlet context={{ closeDetails }} />
       </div>
     </ErrorBoundary>
   );
