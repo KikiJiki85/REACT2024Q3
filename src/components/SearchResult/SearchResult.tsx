@@ -10,7 +10,7 @@ const SearchResult: React.FC<SearchResultProps> = ({ results, isLoading }) => {
   return (
     <>
       {isLoading ? (
-        <div className={styles['search-result']}>
+        <div className={styles['search-result__is-loading']}>
           <img src="/src/assets/loader.gif" alt="Loading..." />
         </div>
       ) : (

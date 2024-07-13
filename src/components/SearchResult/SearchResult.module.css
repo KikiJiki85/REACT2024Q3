@@ -1,7 +1,8 @@
-.search-result {
+.search-result__is-loading {
   display: flex;
   align-items: center;
   justify-content: center;
+  height: 30vh;
 }
 
 .search-result__item {
