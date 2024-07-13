@@ -1,7 +1,7 @@
 .app {
   display: flex;
-  flex-direction: column;
-  height: 100vh;
+  flex-direction: row;
+  justify-content: center;
 }
 
 .app__serch-bar {

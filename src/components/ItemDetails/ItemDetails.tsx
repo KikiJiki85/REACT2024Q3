@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { fetchItemDetails } from '../../api/api';
 import { ItemDetailsType } from './types';
+import styles from './ItemDetails.module.css';
 
 const ItemDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -19,18 +20,18 @@ const ItemDetails: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div>
+      <div className={styles['item-details']}>
         <img src="/src/assets/loader.gif" alt="Loading..." />
       </div>
     );
   }
 
   if (!details) {
-    return <p>No details available</p>;
+    return <p className={styles['item-details']}>No details available</p>;
   }
 
   return (
-    <div>
+    <div className={styles['item-details']}>
       <h2>{details.name}</h2>
       <p>{details.description}</p>
     </div>

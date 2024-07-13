@@ -1,15 +1,11 @@
-import { ApiResponse, Character } from './types';
+import { ApiResponse, Character, State } from './types';
 
 const API = 'https://swapi.dev/api/people';
 
 const getDataFromAPI = (
   query: string,
   page: number,
-  setState: (state: {
-    isLoading: boolean;
-    results?: { name: string; description: string }[];
-    totalPages?: number;
-  }) => void,
+  setState: (state: State) => void,
 ) => {
   setState({ isLoading: true });
   fetch(`${API}?search=${query}&page=${page}`)
@@ -18,7 +14,7 @@ const getDataFromAPI = (
       const results = data.results.map((character: Character) => ({
         name: character.name,
         description: character.birth_year,
-        id: character.url.split('/').filter(Boolean).pop() || '',
+        id: `${character.url.split('/').slice(-2, -1)[0]}`,
       }));
       const totalPages = Math.ceil(data.count / 10);
       setState({ results, isLoading: false, totalPages });
@@ -31,11 +27,7 @@ const getDataFromAPI = (
 
 const fetchResults = (
   searchTerm: string,
-  setState: (state: {
-    isLoading: boolean;
-    results?: { name: string; description: string }[];
-    totalPages?: number;
-  }) => void,
+  setState: (state: State) => void,
   page: number = 1,
 ) => {
   const trimmedSearchTerm = searchTerm.trim();
