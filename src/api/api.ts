@@ -47,4 +47,22 @@ const fetchResults = (
   }
 };
 
-export { fetchResults };
+const fetchItemDetails = (
+  id: string,
+  setState: (details: { name: string; description: string }) => void,
+) => {
+  fetch(`${API}/${id}`)
+    .then(response => response.json())
+    .then((character: Character) => {
+      const details = {
+        name: character.name,
+        description: character.birth_year,
+      };
+      setState(details);
+    })
+    .catch(error => {
+      console.error('Error fetching item details:', error);
+    });
+};
+
+export { fetchResults, fetchItemDetails };
