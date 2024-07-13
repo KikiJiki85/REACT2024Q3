@@ -2,26 +2,39 @@ import React from 'react';
 import { SearchResultProps } from './types';
 import styles from './SearchResult.module.css';
 
-const SearchResult: React.FC<SearchResultProps> = ({ results, isLoading }) => {
+const SearchResult: React.FC<SearchResultProps> = ({
+  results,
+  isLoading,
+  onItemClick,
+}) => {
+  if (isLoading) {
+    return (
+      <div className={styles['search-result__is-loading']}>
+        <img src="/src/assets/loader.gif" alt="Loading..." />
+      </div>
+    );
+  }
   if ((!results || results.length === 0) && !isLoading) {
-    return <div>No results found.</div>;
+    return (
+      <div className={styles['search-result__no-results']}>
+        No results found.
+      </div>
+    );
   }
 
   return (
-    <>
-      {isLoading ? (
-        <div className={styles['search-result__is-loading']}>
-          <img src="/src/assets/loader.gif" alt="Loading..." />
-        </div>
-      ) : (
-        results.map((result, index) => (
-          <div key={index} className={styles['search-result__item']}>
-            <h3>{result.name}</h3>
-            <p>Year of birth: {result.description}</p>
-          </div>
-        ))
-      )}
-    </>
+    <ul className={styles['search-result']}>
+      {results.map(result => (
+        <li
+          key={result.id}
+          onClick={() => onItemClick(result.id)}
+          className={styles['search-result__item']}
+        >
+          <h3>{result.name}</h3>
+          <p>Year of birth: {result.description}</p>
+        </li>
+      ))}
+    </ul>
   );
 };
 

@@ -1,8 +1,29 @@
+.search-result {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  width: 50vw;
+  height: 35vh;
+  align-self: center;
+  gap: 20px;
+  padding: 20px;
+}
+
 .search-result__is-loading {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 30vh;
+}
+
+.search-result__no-results {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 30vh;
+  font-size: 22px;
+  font-weight: bold;
 }
 
 .search-result__item {

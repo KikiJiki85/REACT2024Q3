@@ -11,15 +11,3 @@
   align-items: center;
   height: 15vh;
 }
-
-.app__search-result {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  width: 50vw;
-  height: 35vh;
-  align-self: center;
-  gap: 20px;
-  padding: 20px;
-}

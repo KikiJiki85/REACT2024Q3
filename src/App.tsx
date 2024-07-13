@@ -54,9 +54,9 @@ const App: React.FC = () => {
         <div className={styles['app__serch-bar']}>
           <SearchBar searchTerm={searchTerm || ''} onSearch={handleSearch} />
         </div>
-        <div className={styles['app__search-result']}>
-          <SearchResult results={results} isLoading={isLoading} />
-        </div>
+
+        <SearchResult results={results} isLoading={isLoading} />
+
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
