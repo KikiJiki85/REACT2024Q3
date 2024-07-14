@@ -1,42 +1,29 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useOutletContext } from 'react-router-dom';
 import { fetchItemDetails } from '../../api/api';
 import { ItemDetailsType, OutletContext } from './types';
 import styles from './ItemDetails.module.css';
+import loaderGif from '../../assets/loader.gif';
 
 const ItemDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { closeDetails } = useOutletContext<OutletContext>();
   const [details, setDetails] = useState<ItemDetailsType | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const detailsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (id) {
       fetchItemDetails(id, data => {
-        setDetails(data);
-        setIsLoading(false);
+        setDetails({ name: data.name, description: data.description });
+        setIsLoading(data.isLoading);
       });
     }
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        detailsRef.current &&
-        !detailsRef.current.contains(event.target as Node) &&
-        !(event.target as HTMLElement).closest('li')
-      ) {
-        closeDetails();
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [id, closeDetails]);
+  }, [id]);
 
   if (isLoading) {
     return (
       <div className={styles['item-details']}>
-        <img src="/src/assets/loader.gif" alt="Loading..." />
+        <img src={loaderGif} alt="Loading..." />
       </div>
     );
   }
@@ -46,7 +33,7 @@ const ItemDetails: React.FC = () => {
   }
 
   return (
-    <div className={styles['item-details']} ref={detailsRef}>
+    <div className={styles['item-details']}>
       <div className={styles['item-details__card']}>
         <h2 className={styles['item-details__header']}>{details.name}</h2>
         <p className={styles['item-details__description']}>

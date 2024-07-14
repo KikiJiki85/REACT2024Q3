@@ -1,6 +1,7 @@
 import React from 'react';
 import { SearchResultProps } from './types';
 import styles from './SearchResult.module.css';
+import loaderGif from '../../assets/loader.gif';
 
 const SearchResult: React.FC<SearchResultProps> = ({
   results,
@@ -10,7 +11,7 @@ const SearchResult: React.FC<SearchResultProps> = ({
   if (isLoading) {
     return (
       <div className={styles['search-result__is-loading']}>
-        <img src="/src/assets/loader.gif" alt="Loading..." />
+        <img src={loaderGif} alt="Loading..." />
       </div>
     );
   }

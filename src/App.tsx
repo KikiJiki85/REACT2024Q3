@@ -9,7 +9,7 @@ import useSearchTerm from './useSearchTerm';
 import styles from './App.module.css';
 
 const App: React.FC = () => {
-  const { page } = useParams<{ page: string }>();
+  const { page, id } = useParams<{ page: string; id: string }>();
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState<number>(parseInt(page ?? '1'));
   const [totalPages, setTotalPages] = useState<number>(0);
@@ -17,13 +17,22 @@ const App: React.FC = () => {
   const [results, setResults] = useState<
     { name: string; description: string; id: string }[]
   >([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [detailsOpen, setDetailsOpen] = useState<boolean>(false);
 
   useEffect(() => {
     if (isInitialized) {
       fetchResults(searchTerm || '', updateState, currentPage);
     }
   }, [searchTerm, isInitialized, currentPage]);
+
+  useEffect(() => {
+    if (id) {
+      setDetailsOpen(true);
+    } else {
+      setDetailsOpen(false);
+    }
+  }, [id]);
 
   const handleSearch = (term: string) => {
     const trimmedTerm = term.trim();
@@ -60,7 +69,10 @@ const App: React.FC = () => {
   return (
     <ErrorBoundary>
       <div className={styles.app}>
-        <div className="container">
+        <div
+          className={styles['app__main-panel']}
+          onClick={detailsOpen ? closeDetails : undefined}
+        >
           <div className={styles['app__serch-bar']}>
             <SearchBar searchTerm={searchTerm || ''} onSearch={handleSearch} />
           </div>
