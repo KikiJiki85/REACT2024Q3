@@ -1,4 +1,4 @@
-import { ApiResponse, Character, State } from './types';
+import { ApiResponse, Character, CharacterDetails, State } from './types';
 
 const API = 'https://swapi.dev/api/people';
 
@@ -43,25 +43,49 @@ const fetchItemDetails = (
   id: string,
   setState: (state: {
     name: string;
-    description: string;
+    eyeColor: string;
+    gender: string;
+    hairColor: string;
+    height: string;
+    skinColor: string;
     isLoading: boolean;
   }) => void,
 ) => {
-  setState({ name: '', description: '', isLoading: true });
+  setState({
+    name: '',
+    eyeColor: '',
+    gender: '',
+    hairColor: '',
+    height: '',
+    skinColor: '',
+    isLoading: true,
+  });
 
   fetch(`${API}/${id}`)
     .then(response => response.json())
-    .then((character: Character) => {
+    .then((character: CharacterDetails) => {
       const details = {
         name: character.name,
-        description: character.birth_year,
+        eyeColor: character.eye_color,
+        gender: character.gender,
+        hairColor: character.hair_color,
+        height: character.height,
+        skinColor: character.skin_color,
         isLoading: false,
       };
       setState(details);
     })
     .catch(error => {
       console.error('Error fetching item details:', error);
-      setState({ name: '', description: '', isLoading: false });
+      setState({
+        name: '',
+        eyeColor: '',
+        gender: '',
+        hairColor: '',
+        height: '',
+        skinColor: '',
+        isLoading: true,
+      });
     });
 };
 

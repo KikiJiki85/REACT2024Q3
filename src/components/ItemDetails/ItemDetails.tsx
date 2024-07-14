@@ -18,7 +18,14 @@ const ItemDetails: React.FC = () => {
       return;
     }
     fetchItemDetails(id, data => {
-      setDetails({ name: data.name, description: data.description });
+      setDetails({
+        name: data.name,
+        eyeColor: data.eyeColor,
+        gender: data.gender,
+        hairColor: data.hairColor,
+        height: data.height,
+        skinColor: data.skinColor,
+      });
       setIsLoading(data.isLoading);
     });
   }, [id, navigate]);
@@ -39,9 +46,13 @@ const ItemDetails: React.FC = () => {
     <div className={styles['item-details']}>
       <div className={styles['item-details__card']}>
         <h2 className={styles['item-details__header']}>{details.name}</h2>
-        <p className={styles['item-details__description']}>
-          {details.description}
-        </p>
+        <ul className={styles['item-details__description']}>
+          <li>Eye Color: {details.eyeColor} </li>
+          <li>Gender: {details.gender} </li>
+          <li>Hair Color: {details.hairColor} </li>
+          <li>Height: {details.height} </li>
+          <li>Skin Color: {details.skinColor} </li>
+        </ul>
         <button onClick={closeDetails} className={styles['item-details__btn']}>
           Close
         </button>
