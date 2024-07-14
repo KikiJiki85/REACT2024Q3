@@ -21,6 +21,14 @@ const App: React.FC = () => {
   const [detailsOpen, setDetailsOpen] = useState<boolean>(false);
 
   useEffect(() => {
+    if (!page || isNaN(Number(page))) {
+      navigate('/not-found');
+      return;
+    }
+    setCurrentPage(parseInt(page));
+  }, [page, navigate]);
+
+  useEffect(() => {
     if (isInitialized) {
       fetchResults(searchTerm || '', updateState, currentPage);
     }

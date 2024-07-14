@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams, useOutletContext } from 'react-router-dom';
+import { useParams, useOutletContext, useNavigate } from 'react-router-dom';
 import { fetchItemDetails } from '../../api/api';
 import { ItemDetailsType, OutletContext } from './types';
 import styles from './ItemDetails.module.css';
@@ -10,15 +10,18 @@ const ItemDetails: React.FC = () => {
   const { closeDetails } = useOutletContext<OutletContext>();
   const [details, setDetails] = useState<ItemDetailsType | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if (id) {
-      fetchItemDetails(id, data => {
-        setDetails({ name: data.name, description: data.description });
-        setIsLoading(data.isLoading);
-      });
+    if (!id || isNaN(Number(id))) {
+      navigate('/not-found');
+      return;
     }
-  }, [id]);
+    fetchItemDetails(id, data => {
+      setDetails({ name: data.name, description: data.description });
+      setIsLoading(data.isLoading);
+    });
+  }, [id, navigate]);
 
   if (isLoading) {
     return (
