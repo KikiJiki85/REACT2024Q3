@@ -41,19 +41,27 @@ const fetchResults = (
 
 const fetchItemDetails = (
   id: string,
-  setState: (details: { name: string; description: string }) => void,
+  setState: (state: {
+    name: string;
+    description: string;
+    isLoading: boolean;
+  }) => void,
 ) => {
+  setState({ name: '', description: '', isLoading: true });
+
   fetch(`${API}/${id}`)
     .then(response => response.json())
     .then((character: Character) => {
       const details = {
         name: character.name,
         description: character.birth_year,
+        isLoading: false,
       };
       setState(details);
     })
     .catch(error => {
       console.error('Error fetching item details:', error);
+      setState({ name: '', description: '', isLoading: false });
     });
 };
 

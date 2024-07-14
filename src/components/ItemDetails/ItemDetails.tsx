@@ -13,7 +13,6 @@ const ItemDetails: React.FC = () => {
 
   useEffect(() => {
     if (id) {
-      setIsLoading(true);
       fetchItemDetails(id, data => {
         setDetails(data);
         setIsLoading(false);
@@ -48,9 +47,15 @@ const ItemDetails: React.FC = () => {
 
   return (
     <div className={styles['item-details']} ref={detailsRef}>
-      <h2>{details.name}</h2>
-      <p>{details.description}</p>
-      <button onClick={closeDetails}>Close</button>
+      <div className={styles['item-details__card']}>
+        <h2 className={styles['item-details__header']}>{details.name}</h2>
+        <p className={styles['item-details__description']}>
+          {details.description}
+        </p>
+        <button onClick={closeDetails} className={styles['item-details__btn']}>
+          Close
+        </button>
+      </div>
     </div>
   );
 };
