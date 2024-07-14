@@ -1,83 +1,92 @@
-type Character = {
-    name: string;
-    uid: string;
-};
+import { ApiResponse, Character, CharacterDetails, State } from './types';
 
-type ApiResponse = {
-    characters: Character[];
-};
+const API = 'https://swapi.dev/api/people';
 
-const fetchAllCharacters = (
-    setState: (state: {
-        isLoading: boolean;
-        results?: { name: string; description: string }[];
-    }) => void,
+const getDataFromAPI = (
+  query: string,
+  page: number,
+  setState: (state: State) => void,
 ) => {
-    setState({ isLoading: true });
-
-    fetch("https://stapi.co/api/v1/rest/character/search", {
-        method: "GET",
+  setState({ isLoading: true });
+  fetch(`${API}?search=${query}&page=${page}`)
+    .then(response => response.json())
+    .then((data: ApiResponse) => {
+      const results = data.results.map((character: Character) => ({
+        name: character.name,
+        description: character.birth_year,
+        id: `${character.url.split('/').slice(-2, -1)[0]}`,
+      }));
+      const totalPages = Math.ceil(data.count / 10);
+      setState({ results, isLoading: false, totalPages });
     })
-        .then(response => response.json())
-        .then((data: ApiResponse) => {
-            const results = data.characters.map((character: Character) => ({
-                name: character.name,
-                description: character.uid,
-            }));
-            setState({ results, isLoading: false });
-        })
-        .catch(error => {
-            console.error("Error fetching data:", error);
-            setState({ isLoading: false });
-        });
-};
-
-const fetchCharactersByName = (
-    name: string,
-    setState: (state: {
-        isLoading: boolean;
-        results?: { name: string; description: string }[];
-    }) => void,
-) => {
-    const formData = new URLSearchParams();
-    formData.append("name", name);
-
-    setState({ isLoading: true });
-    fetch(`https://stapi.co/api/v1/rest/character/search/`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: formData.toString(),
-    })
-        .then(response => response.json())
-        .then((data: ApiResponse) => {
-            const results = data.characters.map((character: Character) => ({
-                name: character.name,
-                description: character.uid,
-            }));
-            setState({ results, isLoading: false });
-        })
-        .catch(error => {
-            console.error("Error fetching data:", error);
-            setState({ isLoading: false });
-        });
+    .catch(error => {
+      console.error('Error fetching data:', error);
+      setState({ isLoading: false });
+    });
 };
 
 const fetchResults = (
-    searchTerm: string,
-    setState: (state: {
-        isLoading: boolean;
-        results?: { name: string; description: string }[];
-    }) => void,
+  searchTerm: string,
+  setState: (state: State) => void,
+  page: number = 1,
 ) => {
-    const trimmedSearchTerm = searchTerm.trim();
+  const trimmedSearchTerm = searchTerm.trim();
 
-    if (trimmedSearchTerm) {
-        fetchCharactersByName(trimmedSearchTerm, setState);
-    } else {
-        fetchAllCharacters(setState);
-    }
+  if (trimmedSearchTerm) {
+    getDataFromAPI(trimmedSearchTerm, page, setState);
+  } else {
+    getDataFromAPI('', page, setState);
+  }
 };
 
-export { fetchResults };
+const fetchItemDetails = (
+  id: string,
+  setState: (state: {
+    name: string;
+    eyeColor: string;
+    gender: string;
+    hairColor: string;
+    height: string;
+    skinColor: string;
+    isLoading: boolean;
+  }) => void,
+) => {
+  setState({
+    name: '',
+    eyeColor: '',
+    gender: '',
+    hairColor: '',
+    height: '',
+    skinColor: '',
+    isLoading: true,
+  });
+
+  fetch(`${API}/${id}`)
+    .then(response => response.json())
+    .then((character: CharacterDetails) => {
+      const details = {
+        name: character.name,
+        eyeColor: character.eye_color,
+        gender: character.gender,
+        hairColor: character.hair_color,
+        height: character.height,
+        skinColor: character.skin_color,
+        isLoading: false,
+      };
+      setState(details);
+    })
+    .catch(error => {
+      console.error('Error fetching item details:', error);
+      setState({
+        name: '',
+        eyeColor: '',
+        gender: '',
+        hairColor: '',
+        height: '',
+        skinColor: '',
+        isLoading: true,
+      });
+    });
+};
+
+export { fetchResults, fetchItemDetails };

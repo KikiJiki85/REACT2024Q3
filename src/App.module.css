@@ -1,0 +1,19 @@
+.app {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  height: 100vh;
+}
+
+.app__main-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.app__serch-bar {
+  border-bottom: 1px solid black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 100px;
+}

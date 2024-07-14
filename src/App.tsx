@@ -1,77 +1,107 @@
-import { Component } from "react";
-import SearchBar from "./components/SearchBar";
-import SearchResults from "./components/SearchResult";
-import ErrorBoundary from "./components/ErrorBoundary";
-import { fetchResults } from "./api/api";
+import { useEffect, useState } from 'react';
+import { useParams, useNavigate, Outlet } from 'react-router-dom';
+import SearchBar from './components/SearchBar/SearchBar';
+import SearchResult from './components/SearchResult/SearchResult';
+import Pagination from './components/Pagination/Pagination';
+import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
+import { fetchResults } from './api/api';
+import useSearchTerm from './useSearchTerm';
+import styles from './App.module.css';
 
-interface AppState {
-    searchTerm: string;
-    results: { name: string; description: string }[];
-    isLoading: boolean;
-}
+const App: React.FC = () => {
+  const { page, id } = useParams<{ page: string; id: string }>();
+  const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState<number>(parseInt(page ?? '1'));
+  const [totalPages, setTotalPages] = useState<number>(0);
+  const [searchTerm, setSearchTermAndSave, isInitialized] = useSearchTerm('');
+  const [results, setResults] = useState<
+    { name: string; description: string; id: string }[]
+  >([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [detailsOpen, setDetailsOpen] = useState<boolean>(false);
 
-class App extends Component<{}, AppState> {
-    constructor(props: {}) {
-        super(props);
-        this.state = {
-            searchTerm: "",
-            results: [],
-            isLoading: false,
-        };
+  useEffect(() => {
+    if (!page || isNaN(Number(page))) {
+      navigate('/not-found');
+      return;
     }
+    setCurrentPage(parseInt(page));
+  }, [page, navigate]);
 
-    componentDidMount() {
-        const savedSearchTerm = localStorage.getItem("searchTerm");
-
-        if (savedSearchTerm) {
-            this.setState({ searchTerm: savedSearchTerm }, () => {
-                fetchResults(savedSearchTerm, this.updateState);
-            });
-        } else {
-            fetchResults("", this.updateState);
-        }
+  useEffect(() => {
+    if (isInitialized) {
+      fetchResults(searchTerm || '', updateState, currentPage);
     }
+  }, [searchTerm, isInitialized, currentPage]);
 
-    handleSearch = (term: string) => {
-        const trimmedTerm = term.trim();
-        localStorage.setItem("searchTerm", trimmedTerm);
-        this.setState({ searchTerm: trimmedTerm }, () => {
-            fetchResults(trimmedTerm, this.updateState);
-        });
-    };
-
-    updateState = (state: Partial<AppState>) => {
-        this.setState(state as Pick<AppState, keyof AppState>);
-    };
-
-    render() {
-        const { searchTerm, results, isLoading } = this.state;
-
-        return (
-            <ErrorBoundary>
-                <div
-                    style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        height: "100vh",
-                    }}
-                >
-                    <div style={{ flex: "1", borderBottom: "1px solid black" }}>
-                        <SearchBar
-                            searchTerm={searchTerm}
-                            onSearch={this.handleSearch}
-                        />
-                    </div>
-                    <div style={{ flex: "4", overflowY: "scroll" }}>
-                        <SearchResults
-                            results={results}
-                            isLoading={isLoading}
-                        />
-                    </div>
-                </div>
-            </ErrorBoundary>
-        );
+  useEffect(() => {
+    if (id) {
+      setDetailsOpen(true);
+    } else {
+      setDetailsOpen(false);
     }
-}
+  }, [id]);
+
+  const handleSearch = (term: string) => {
+    const trimmedTerm = term.trim();
+    setSearchTermAndSave(trimmedTerm);
+    setCurrentPage(1);
+    fetchResults(trimmedTerm, updateState, 1);
+  };
+
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
+    navigate(`/search/${newPage}`);
+  };
+
+  const handleItemClick = (id: string) => {
+    navigate(`/search/${currentPage}/details/${id}`);
+  };
+
+  const closeDetails = () => {
+    navigate(`/search/${currentPage}`);
+  };
+
+  const updateState = (
+    state: Partial<{
+      results: { name: string; description: string; id: string }[];
+      isLoading: boolean;
+      totalPages: number;
+    }>,
+  ) => {
+    if (state.results) setResults(state.results);
+    if (state.isLoading !== undefined) setIsLoading(state.isLoading);
+    if (state.totalPages !== undefined) setTotalPages(state.totalPages);
+  };
+
+  return (
+    <ErrorBoundary>
+      <div className={styles.app}>
+        <div
+          className={styles['app__main-panel']}
+          onClick={detailsOpen ? closeDetails : undefined}
+        >
+          <div className={styles['app__serch-bar']}>
+            <SearchBar searchTerm={searchTerm || ''} onSearch={handleSearch} />
+          </div>
+
+          <SearchResult
+            results={results}
+            isLoading={isLoading}
+            onItemClick={handleItemClick}
+          />
+
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
+        </div>
+
+        <Outlet context={{ closeDetails }} />
+      </div>
+    </ErrorBoundary>
+  );
+};
 
 export default App;
