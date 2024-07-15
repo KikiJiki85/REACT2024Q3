@@ -1,6 +1,5 @@
 .error-block {
   display: flex;
-  flex-direction: column;
 }
 
 .error-block__btn {

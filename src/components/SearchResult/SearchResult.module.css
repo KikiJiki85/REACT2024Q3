@@ -33,6 +33,6 @@
   justify-content: center;
   padding: 10px;
   cursor: pointer;
-  border: 1px solid black;
+  border: 1px solid var(--border-btn);
   border-radius: 10px;
 }

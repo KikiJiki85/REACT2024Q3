@@ -7,10 +7,12 @@ import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 import { fetchResults } from './api/api';
 import useSearchTerm from './useSearchTerm';
 import styles from './App.module.css';
+import { useTheme } from './components/ThemeContext/ThemeContext';
 
 const App: React.FC = () => {
   const { page, id } = useParams<{ page: string; id: string }>();
   const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
   const [currentPage, setCurrentPage] = useState<number>(parseInt(page ?? '1'));
   const [totalPages, setTotalPages] = useState<number>(0);
   const [searchTerm, setSearchTermAndSave, isInitialized] = useSearchTerm('');
@@ -76,11 +78,16 @@ const App: React.FC = () => {
 
   return (
     <ErrorBoundary>
-      <div className={styles.app}>
+      <div
+        className={`${styles.app} ${theme === 'light' ? styles.light : styles.dark}`}
+      >
         <div
           className={styles['app__main-panel']}
           onClick={detailsOpen ? closeDetails : undefined}
         >
+          <button onClick={toggleTheme} className={styles['app__theme-button']}>
+            Toggle Theme
+          </button>
           <div className={styles['app__serch-bar']}>
             <SearchBar searchTerm={searchTerm || ''} onSearch={handleSearch} />
           </div>
