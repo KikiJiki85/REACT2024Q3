@@ -3,7 +3,6 @@ import '@testing-library/jest-dom';
 import { describe, it, expect } from 'vitest';
 import SearchResult from '../components/SearchResult/SearchResult';
 
-// Моковые данные
 const mockResults = [
   { id: '1', name: 'John Doe', description: '1980' },
   { id: '2', name: 'Jane Smith', description: '1990' },
