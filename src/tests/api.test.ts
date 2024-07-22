@@ -138,7 +138,7 @@ describe('fetchItemDetails', () => {
       hairColor: '',
       height: '',
       skinColor: '',
-      isLoading: true,
+      isLoading: false,
     });
   });
 });
