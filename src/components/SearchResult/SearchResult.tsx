@@ -6,15 +6,9 @@ import { SearchResultProps } from './types';
 import styles from './SearchResult.module.css';
 import loaderGif from '../../assets/loader.gif';
 
-const SearchResult: React.FC<SearchResultProps> = ({
-  results,
-  isLoading,
-  onItemClick,
-}) => {
+const SearchResult: React.FC<SearchResultProps> = ({ results, isLoading, onItemClick }) => {
   const dispatch = useDispatch();
-  const selectedItems = useSelector(
-    (state: RootState) => state.selectedItems as { [key: string]: boolean },
-  );
+  const selectedItems = useSelector((state: RootState) => state.selectedItems as { [key: string]: boolean });
 
   if (isLoading) {
     return (
@@ -26,15 +20,13 @@ const SearchResult: React.FC<SearchResultProps> = ({
 
   if ((!results || results.length === 0) && !isLoading) {
     return (
-      <div className={styles['search-result__no-results']}>
-        No results found.
-      </div>
+      <div className={styles['search-result__no-results']}>No results found.</div>
     );
   }
 
   return (
     <ul className={styles['search-result']}>
-      {results.map(result => (
+      {results.map((result) => (
         <li key={result.id} className={styles['search-result__item']}>
           <h3 onClick={() => onItemClick(result.id)}>{result.name}</h3>
           <p>Year of birth: {result.description}</p>

@@ -9,7 +9,9 @@ type Character = {
 
 type GetCharactersResponse = {
   results: Character[];
-  totalPages: number;
+  count: number;
+  next: string | null;
+  previous: string | null;
 };
 
 type QueryArgGetCharacters = { searchTerm: string; page: number };
@@ -28,5 +30,15 @@ export const apiSlice = createApi({
   }),
 });
 
-export const useGetCharactersQuery = apiSlice.endpoints.getCharacters.useQuery as (arg: QueryArgGetCharacters) => { data: GetCharactersResponse | undefined; error: FetchBaseQueryError | undefined; isLoading: boolean; };
-export const useGetCharacterDetailsQuery = apiSlice.endpoints.getCharacterDetails.useQuery as (arg: string) => { data: Character | undefined; error: FetchBaseQueryError | undefined; isLoading: boolean; };
+export const useGetCharactersQuery = apiSlice.endpoints.getCharacters
+  .useQuery as (arg: QueryArgGetCharacters) => {
+  data: GetCharactersResponse | undefined;
+  error: FetchBaseQueryError | undefined;
+  isLoading: boolean;
+};
+export const useGetCharacterDetailsQuery = apiSlice.endpoints
+  .getCharacterDetails.useQuery as (arg: string) => {
+  data: Character | undefined;
+  error: FetchBaseQueryError | undefined;
+  isLoading: boolean;
+};

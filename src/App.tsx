@@ -21,6 +21,8 @@ const App: React.FC = () => {
     page: currentPage,
   });
 
+  const totalPages = data ? Math.ceil(data.count / 10) : 0;
+
   useEffect(() => {
     if (!page || isNaN(Number(page))) {
       navigate('/not-found');
@@ -66,7 +68,7 @@ const App: React.FC = () => {
 
           <Pagination
             currentPage={currentPage}
-            totalPages={data?.totalPages || 0}
+            totalPages={totalPages}
             onPageChange={handlePageChange}
           />
         </div>
