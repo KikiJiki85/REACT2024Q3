@@ -1,4 +1,7 @@
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { toggleItem } from '../../features/selectedItemsSlice';
+import { RootState } from '../../store';
 import { SearchResultProps } from './types';
 import styles from './SearchResult.module.css';
 import loaderGif from '../../assets/loader.gif';
@@ -8,6 +11,11 @@ const SearchResult: React.FC<SearchResultProps> = ({
   isLoading,
   onItemClick,
 }) => {
+  const dispatch = useDispatch();
+  const selectedItems = useSelector(
+    (state: RootState) => state.selectedItems as { [key: string]: boolean },
+  );
+
   if (isLoading) {
     return (
       <div className={styles['search-result__is-loading']}>
@@ -15,6 +23,7 @@ const SearchResult: React.FC<SearchResultProps> = ({
       </div>
     );
   }
+
   if ((!results || results.length === 0) && !isLoading) {
     return (
       <div className={styles['search-result__no-results']}>
@@ -26,13 +35,14 @@ const SearchResult: React.FC<SearchResultProps> = ({
   return (
     <ul className={styles['search-result']}>
       {results.map(result => (
-        <li
-          key={result.id}
-          onClick={() => onItemClick(result.id)}
-          className={styles['search-result__item']}
-        >
-          <h3>{result.name}</h3>
+        <li key={result.id} className={styles['search-result__item']}>
+          <h3 onClick={() => onItemClick(result.id)}>{result.name}</h3>
           <p>Year of birth: {result.description}</p>
+          <input
+            type="checkbox"
+            checked={!!selectedItems[result.id]}
+            onChange={() => dispatch(toggleItem(result.id))}
+          />
         </li>
       ))}
     </ul>
