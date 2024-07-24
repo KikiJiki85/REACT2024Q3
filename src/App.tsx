@@ -8,6 +8,7 @@ import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 import useSearchTerm from './useSearchTerm';
 import styles from './App.module.css';
 import { useTheme } from './components/ThemeContext/ThemeContext';
+import { isContext } from 'vm';
 
 const App: React.FC = () => {
   const { page } = useParams<{ page: string }>();
@@ -22,6 +23,8 @@ const App: React.FC = () => {
   });
 
   const totalPages = data ? Math.ceil(data.count / 10) : 0;
+
+  console.log(data);
 
   useEffect(() => {
     if (!page || isNaN(Number(page))) {

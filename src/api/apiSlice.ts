@@ -2,9 +2,22 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 
 type Character = {
-  id: string;
   name: string;
-  description: string;
+  height: string;
+  mass: string;
+  hair_color: string;
+  skin_color: string;
+  eye_color: string;
+  birth_year: string;
+  gender: string;
+  homeworld: string;
+  films: string[];
+  species: string[];
+  vehicles: string[];
+  starships: string[];
+  created: string;
+  edited: string;
+  url: string;
 };
 
 type GetCharactersResponse = {
@@ -14,7 +27,7 @@ type GetCharactersResponse = {
   previous: string | null;
 };
 
-type QueryArgGetCharacters = { searchTerm: string; page: number };
+type QueryArgGetCharacters = { searchTerm: string | null; page: number };
 
 export const apiSlice = createApi({
   reducerPath: 'api',
