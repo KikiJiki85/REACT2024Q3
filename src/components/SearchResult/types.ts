@@ -1,3 +1,5 @@
+import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
+
 export interface SearchResultProps {
   results: Array<{
     name: string;
@@ -17,6 +19,7 @@ export interface SearchResultProps {
     edited: string;
     url: string;
   }>;
+  error: FetchBaseQueryError | undefined;
   isLoading: boolean;
   onItemClick: (id: string) => void;
 }

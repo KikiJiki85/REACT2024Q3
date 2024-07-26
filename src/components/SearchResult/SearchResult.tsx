@@ -9,6 +9,7 @@ import loaderGif from '../../assets/loader.gif';
 const SearchResult: React.FC<SearchResultProps> = ({
   results,
   isLoading,
+  error,
   onItemClick,
 }) => {
   const dispatch = useDispatch();
@@ -21,6 +22,12 @@ const SearchResult: React.FC<SearchResultProps> = ({
       <div className={styles['search-result__is-loading']}>
         <img src={loaderGif} alt="Loading..." />
       </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={styles['search-result__error']}>Error loading data.</div>
     );
   }
 

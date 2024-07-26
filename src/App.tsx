@@ -8,7 +8,6 @@ import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 import useSearchTerm from './useSearchTerm';
 import styles from './App.module.css';
 import { useTheme } from './components/ThemeContext/ThemeContext';
-import { isContext } from 'vm';
 
 const App: React.FC = () => {
   const { page } = useParams<{ page: string }>();
@@ -17,14 +16,12 @@ const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(parseInt(page ?? '1'));
   const [searchTerm, setSearchTermAndSave] = useSearchTerm('');
 
-  const { data, isLoading } = useGetCharactersQuery({
+  const { data, isLoading, error } = useGetCharactersQuery({
     searchTerm,
     page: currentPage,
   });
 
   const totalPages = data ? Math.ceil(data.count / 10) : 0;
-
-  console.log(data);
 
   useEffect(() => {
     if (!page || isNaN(Number(page))) {
@@ -66,6 +63,7 @@ const App: React.FC = () => {
           <SearchResult
             results={data?.results || []}
             isLoading={isLoading}
+            error={error}
             onItemClick={handleItemClick}
           />
 
@@ -75,7 +73,6 @@ const App: React.FC = () => {
             onPageChange={handlePageChange}
           />
         </div>
-
         <Outlet />
       </div>
     </ErrorBoundary>
