@@ -10,11 +10,12 @@ import styles from './App.module.css';
 import { useTheme } from './components/ThemeContext/ThemeContext';
 
 const App: React.FC = () => {
-  const { page } = useParams<{ page: string }>();
+  const { page, id } = useParams<{ page: string; id: string }>();
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
   const [currentPage, setCurrentPage] = useState<number>(parseInt(page ?? '1'));
   const [searchTerm, setSearchTermAndSave] = useSearchTerm('');
+  const [detailsOpen, setDetailsOpen] = useState<boolean>(false);
 
   const { data, isLoading, error } = useGetCharactersQuery({
     searchTerm,
@@ -30,6 +31,14 @@ const App: React.FC = () => {
     }
     setCurrentPage(parseInt(page));
   }, [page, navigate]);
+
+  useEffect(() => {
+    if (id) {
+      setDetailsOpen(true);
+    } else {
+      setDetailsOpen(false);
+    }
+  }, [id]);
 
   const handleSearch = (term: string) => {
     const trimmedTerm = term.trim();
@@ -47,12 +56,19 @@ const App: React.FC = () => {
     navigate(`/search/${currentPage}/details/${id}`);
   };
 
+  const closeDetails = () => {
+    navigate(`/search/${currentPage}`);
+  };
+
   return (
     <ErrorBoundary>
       <div
         className={`${styles.app} ${theme === 'light' ? styles.light : styles.dark}`}
       >
-        <div className={styles['app__main-panel']}>
+        <div
+          className={styles['app__main-panel']}
+          onClick={detailsOpen ? closeDetails : undefined}
+        >
           <button onClick={toggleTheme} className={styles['app__theme-button']}>
             Toggle Theme
           </button>
@@ -73,7 +89,7 @@ const App: React.FC = () => {
             onPageChange={handlePageChange}
           />
         </div>
-        <Outlet />
+        <Outlet context={{ closeDetails }} />
       </div>
     </ErrorBoundary>
   );
