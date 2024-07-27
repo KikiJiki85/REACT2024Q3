@@ -19,11 +19,14 @@ const SearchResult: React.FC<SearchResultProps> = ({
 }) => {
   const dispatch = useAppDispatch();
   const selectedItems = useAppSelector(
-    (state: RootState) => state.selectedItems as { [key: string]: boolean },
+    (state: RootState) => state.selectedItems.items,
+  );
+  const allSelectedItemsDetails = useAppSelector(
+    (state: RootState) => state.selectedItems.itemDetails,
   );
 
   const selectedCount = Object.values(selectedItems).filter(Boolean).length;
-  const selectedResults = results.filter(result => selectedItems[result.url]);
+  const selectedResults = Object.values(allSelectedItemsDetails);
 
   const handleUnselectAll = () => {
     dispatch(unselectAllItems());
@@ -32,7 +35,7 @@ const SearchResult: React.FC<SearchResultProps> = ({
   const handleDownload = () => {
     const csvData = selectedResults.map(item => ({
       name: item.name,
-      description: item.hair_color || '',
+      description: item.homeworld,
       url: item.url,
       birth_year: item.birth_year,
     }));
@@ -79,7 +82,9 @@ const SearchResult: React.FC<SearchResultProps> = ({
             <input
               type="checkbox"
               checked={!!selectedItems[result.url]}
-              onChange={() => dispatch(toggleItem(result.url))}
+              onChange={() =>
+                dispatch(toggleItem({ url: result.url, item: result }))
+              }
             />
           </li>
         ))}

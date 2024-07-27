@@ -19,6 +19,10 @@ const ItemDetails: React.FC = () => {
   }, [id, navigate]);
 
   if (isLoading) {
+    console.log(isLoading);
+  }
+
+  if (isLoading) {
     return (
       <div className={styles['item-details']}>
         <img src={loaderGif} alt="Loading..." />
