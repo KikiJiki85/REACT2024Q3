@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 
-type Character = {
+export type Character = {
   name: string;
   height: string;
   mass: string;

@@ -1,21 +1,19 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-export interface SelectedItemsState {
-  [key: string]: boolean;
-}
-
-const initialState: SelectedItemsState = {};
-
 const selectedItemsSlice = createSlice({
   name: 'selectedItems',
-  initialState,
+  initialState: {} as { [key: string]: boolean },
   reducers: {
-    toggleItem: (state, action: PayloadAction<string>) => {
-      const itemId = action.payload;
-      state[itemId] = !state[itemId];
+    toggleItem(state, action: PayloadAction<string>) {
+      state[action.payload] = !state[action.payload];
+    },
+    unselectAllItems(state) {
+      Object.keys(state).forEach(key => {
+        state[key] = false;
+      });
     },
   },
 });
 
-export const { toggleItem } = selectedItemsSlice.actions;
+export const { toggleItem, unselectAllItems } = selectedItemsSlice.actions;
 export default selectedItemsSlice.reducer;

@@ -1,10 +1,15 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { toggleItem } from '../../features/selectedItemsSlice';
+import {
+  toggleItem,
+  unselectAllItems,
+} from '../../features/selectedItemsSlice';
 import { RootState } from '../../store';
 import { SearchResultProps } from './types';
 import styles from './SearchResult.module.css';
 import loaderGif from '../../assets/loader.gif';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { csvFormat } from 'd3-dsv';
+import { saveAs } from 'file-saver';
 
 const SearchResult: React.FC<SearchResultProps> = ({
   results,
@@ -12,10 +17,29 @@ const SearchResult: React.FC<SearchResultProps> = ({
   error,
   onItemClick,
 }) => {
-  const dispatch = useDispatch();
-  const selectedItems = useSelector(
+  const dispatch = useAppDispatch();
+  const selectedItems = useAppSelector(
     (state: RootState) => state.selectedItems as { [key: string]: boolean },
   );
+
+  const selectedCount = Object.values(selectedItems).filter(Boolean).length;
+  const selectedResults = results.filter(result => selectedItems[result.url]);
+
+  const handleUnselectAll = () => {
+    dispatch(unselectAllItems());
+  };
+
+  const handleDownload = () => {
+    const csvData = selectedResults.map(item => ({
+      name: item.name,
+      description: item.hair_color || '',
+      url: item.url,
+      birth_year: item.birth_year,
+    }));
+    const csvContent = csvFormat(csvData);
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    saveAs(blob, `${selectedCount}_items.csv`);
+  };
 
   if (isLoading) {
     return (
@@ -40,23 +64,34 @@ const SearchResult: React.FC<SearchResultProps> = ({
   }
 
   return (
-    <ul className={styles['search-result']}>
-      {results.map(result => (
-        <li key={result.url} className={styles['search-result__item']}>
-          <h3
-            onClick={() => onItemClick(result.url.split('/').slice(-2, -1)[0])}
-          >
-            {result.name}
-          </h3>
-          <p>Year of birth: {result.birth_year}</p>
-          <input
-            type="checkbox"
-            checked={!!selectedItems[result.url]}
-            onChange={() => dispatch(toggleItem(result.url))}
-          />
-        </li>
-      ))}
-    </ul>
+    <>
+      <ul className={styles['search-result']}>
+        {results.map(result => (
+          <li key={result.url} className={styles['search-result__item']}>
+            <h3
+              onClick={() =>
+                onItemClick(result.url.split('/').slice(-2, -1)[0])
+              }
+            >
+              {result.name}
+            </h3>
+            <p>Year of birth: {result.birth_year}</p>
+            <input
+              type="checkbox"
+              checked={!!selectedItems[result.url]}
+              onChange={() => dispatch(toggleItem(result.url))}
+            />
+          </li>
+        ))}
+      </ul>
+      {selectedCount > 0 && (
+        <div className={styles['flyout']}>
+          <p>{selectedCount} items are selected</p>
+          <button onClick={handleUnselectAll}>Unselect all</button>
+          <button onClick={handleDownload}>Download</button>
+        </div>
+      )}
+    </>
   );
 };
 
