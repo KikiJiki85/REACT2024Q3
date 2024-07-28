@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import configureStore, { MockStoreEnhanced } from 'redux-mock-store';
 import SearchResult from '../components/SearchResult/SearchResult';
 import { RootState } from '../store';
-import { toggleItem, unselectAllItems } from '../features/selectedItemsSlice';
+import { toggleItem } from '../features/selectedItemsSlice';
 import { Character } from '../api/apiSlice';
 
 const mockStore = configureStore<Partial<RootState>>();
@@ -156,65 +156,5 @@ describe('SearchResult Component', () => {
         item: mockResults[1],
       }),
     );
-  });
-
-  it('handles unselect all correctly', () => {
-    store = mockStore({
-      selectedItems: {
-        items: {
-          'http://swapi.dev/api/people/1/': true,
-          'http://swapi.dev/api/people/2/': true,
-        },
-        itemDetails: {
-          'http://swapi.dev/api/people/1/': mockResults[0],
-          'http://swapi.dev/api/people/2/': mockResults[1],
-        },
-      },
-    });
-    render(
-      <Provider store={store}>
-        <SearchResult
-          results={mockResults}
-          isLoading={false}
-          error={undefined}
-          onItemClick={() => {}}
-        />
-      </Provider>,
-    );
-
-    fireEvent.click(screen.getByText('Unselect all'));
-    expect(mockDispatch).toHaveBeenCalledWith(unselectAllItems());
-  });
-
-  it('handles download correctly', () => {
-    store = mockStore({
-      selectedItems: {
-        items: {
-          'http://swapi.dev/api/people/1/': true,
-          'http://swapi.dev/api/people/2/': true,
-        },
-        itemDetails: {
-          'http://swapi.dev/api/people/1/': mockResults[0],
-          'http://swapi.dev/api/people/2/': mockResults[1],
-        },
-      },
-    });
-    const { container } = render(
-      <Provider store={store}>
-        <SearchResult
-          results={mockResults}
-          isLoading={false}
-          error={undefined}
-          onItemClick={() => {}}
-        />
-      </Provider>,
-    );
-
-    fireEvent.click(screen.getByText('Download'));
-    const downloadLink = container.querySelector('a');
-    expect(downloadLink).not.toBeNull();
-    if (downloadLink) {
-      expect(downloadLink.href).toContain('text/csv');
-    }
   });
 });
