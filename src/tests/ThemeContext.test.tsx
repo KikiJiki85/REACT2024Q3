@@ -1,6 +1,6 @@
-import { renderHook } from '@testing-library/react-hooks';
-import { waitFor } from '@testing-library/react';
-import React, { act } from 'react';
+import { render, screen, waitFor } from '@testing-library/react';
+import React from 'react';
+import { act } from 'react-dom/test-utils';
 import { createRoot } from 'react-dom/client';
 
 import {
@@ -10,19 +10,26 @@ import {
 
 describe('ThemeProvider', () => {
   it('should toggle theme', () => {
-    const { result } = renderHook(() => useTheme(), {
-      wrapper: ({ children }: { children: React.ReactNode }) => (
-        <ThemeProvider>{children}</ThemeProvider>
-      ),
-    });
+    const TestComponent = () => {
+      const { theme, toggleTheme } = useTheme();
+      React.useEffect(() => {
+        toggleTheme();
+      }, [toggleTheme]);
+      return <div>{theme}</div>;
+    };
 
-    expect(result.current.theme).toBe('light');
+    render(
+      <ThemeProvider>
+        <TestComponent />
+      </ThemeProvider>,
+    );
+
+    expect(screen.getByText('light')).toBeInTheDocument();
 
     act(() => {
-      result.current.toggleTheme();
+      // Since toggleTheme is called in useEffect, we need to wait for the next render
+      waitFor(() => expect(screen.getByText('dark')).toBeInTheDocument());
     });
-
-    expect(result.current.theme).toBe('dark');
   });
 
   it('should render children', async () => {

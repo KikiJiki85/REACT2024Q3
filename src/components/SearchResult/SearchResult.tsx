@@ -81,6 +81,7 @@ const SearchResult: React.FC<SearchResultProps> = ({
             <p>Year of birth: {result.birth_year}</p>
             <input
               type="checkbox"
+              aria-label={result.name}
               checked={!!selectedItems[result.url]}
               onChange={() =>
                 dispatch(toggleItem({ url: result.url, item: result }))
