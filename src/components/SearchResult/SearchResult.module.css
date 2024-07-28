@@ -1,5 +1,6 @@
 .search-result {
   display: flex;
+  position: relative;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
@@ -33,6 +34,33 @@
   justify-content: center;
   padding: 10px;
   cursor: pointer;
-  border: 1px solid black;
+  border: 1px solid var(--border-btn);
   border-radius: 10px;
+}
+
+.flyout {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--bg-main);
+  border-top: 1px solid #ccc;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.flyout p {
+  margin: 0;
+  font-weight: bold;
+}
+
+.flyout button {
+  margin-left: 10px;
+  background-color: var(--bg-btn);
+  border: 1px solid var(--border-btn);
+  color: var(--text-btn);
+  padding: 10px 20px;
+  cursor: pointer;
 }

@@ -7,7 +7,7 @@
   height: 100vh;
   font-size: 22px;
   font-weight: bold;
-  border-left: 1px solid black;
+  border-left: 1px solid var(--border-btn);
 }
 
 .item-details__card {
@@ -16,7 +16,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border: 1px solid black;
+  border: 1px solid var(--border-btn);
   padding: 20px;
 }
 
@@ -39,4 +39,7 @@
 .item-details__btn {
   cursor: pointer;
   padding: 5px 10px;
+  background-color: var(--bg-btn);
+  color: var(--text-btn);
+  border: 1px solid var(--border-btn);
 }

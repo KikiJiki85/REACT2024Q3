@@ -84,7 +84,7 @@ const fetchItemDetails = (
         hairColor: '',
         height: '',
         skinColor: '',
-        isLoading: true,
+        isLoading: false,
       });
     });
 };
