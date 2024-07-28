@@ -1,34 +1,55 @@
-import { renderHook, act } from '@testing-library/react-hooks';
+import { render, screen, waitFor } from '@testing-library/react';
+import React from 'react';
+import { act } from 'react-dom/test-utils';
 import useSearchTerm from '../useSearchTerm';
+
+const TestComponent: React.FC<{ initialTerm: string }> = ({ initialTerm }) => {
+  const [searchTerm, setSearchTerm, isInitialized] = useSearchTerm(initialTerm);
+  return (
+    <div>
+      <span data-testid="searchTerm">{searchTerm}</span>
+      <span data-testid="isInitialized">
+        {isInitialized ? 'true' : 'false'}
+      </span>
+      <button onClick={() => setSearchTerm('newTerm')}>Update Term</button>
+    </div>
+  );
+};
 
 describe('useSearchTerm', () => {
   beforeEach(() => {
     localStorage.clear();
   });
 
-  it('should initialize with initial term if no saved term in localStorage', () => {
-    const { result } = renderHook(() => useSearchTerm('initial'));
+  it('should initialize with initial term if no saved term in localStorage', async () => {
+    render(<TestComponent initialTerm="initial" />);
 
-    expect(result.current[0]).toBe('initial');
-    expect(result.current[2]).toBe(true);
+    await waitFor(() => {
+      expect(screen.getByTestId('searchTerm')).toHaveTextContent('initial');
+      expect(screen.getByTestId('isInitialized')).toHaveTextContent('true');
+    });
   });
 
-  it('should initialize with saved term from localStorage', () => {
+  it('should initialize with saved term from localStorage', async () => {
     localStorage.setItem('searchTerm', 'savedTerm');
-    const { result } = renderHook(() => useSearchTerm('initial'));
+    render(<TestComponent initialTerm="initial" />);
 
-    expect(result.current[0]).toBe('savedTerm');
-    expect(result.current[2]).toBe(true);
+    await waitFor(() => {
+      expect(screen.getByTestId('searchTerm')).toHaveTextContent('savedTerm');
+      expect(screen.getByTestId('isInitialized')).toHaveTextContent('true');
+    });
   });
 
-  it('should update search term and save to localStorage', () => {
-    const { result } = renderHook(() => useSearchTerm('initial'));
+  it('should update search term and save to localStorage', async () => {
+    render(<TestComponent initialTerm="initial" />);
 
     act(() => {
-      result.current[1]('newTerm');
+      screen.getByText('Update Term').click();
     });
 
-    expect(result.current[0]).toBe('newTerm');
-    expect(localStorage.getItem('searchTerm')).toBe('newTerm');
+    await waitFor(() => {
+      expect(screen.getByTestId('searchTerm')).toHaveTextContent('newTerm');
+      expect(localStorage.getItem('searchTerm')).toBe('newTerm');
+    });
   });
 });
