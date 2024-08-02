@@ -1,11 +1,11 @@
 import { useRouter } from 'next/router';
-import App from '../../App';
+import SearchPage from '../../App';
 
-const SearchPage = () => {
+const Page = () => {
   const router = useRouter();
   const { page } = router.query;
 
-  return <App page={page} />;
+  return <SearchPage page={page} />;
 };
 
-export default SearchPage;
+export default Page;
