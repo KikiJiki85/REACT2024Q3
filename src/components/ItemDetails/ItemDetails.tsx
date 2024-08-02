@@ -24,7 +24,12 @@ const ItemDetails: React.FC<ItemDetailsProps> = ({ id }) => {
   if (isLoading) {
     return (
       <div className={styles['item-details']}>
-        <Image src="/assets/loader.gif" alt="Loading..." />
+        <Image
+          src="/assets/loader.gif"
+          alt="Loading..."
+          width={64}
+          height={64}
+        />
       </div>
     );
   }

@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react';
-import React from 'react';
-import { act } from 'react-dom/test-utils';
+import React, { act } from 'react';
+import { describe, it, expect, beforeEach } from 'vitest';
 import useSearchTerm from '../useSearchTerm';
 
 const TestComponent: React.FC<{ initialTerm: string }> = ({ initialTerm }) => {
