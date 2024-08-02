@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useGetCharacterDetailsQuery } from '../../api/apiSlice';
 import styles from './ItemDetails.module.css';
-import loaderGif from '../../assets/loader.gif';
+import Image from 'next/image';
 
 interface ItemDetailsProps {
   id: string | string[] | undefined;
@@ -24,7 +24,7 @@ const ItemDetails: React.FC<ItemDetailsProps> = ({ id }) => {
   if (isLoading) {
     return (
       <div className={styles['item-details']}>
-        <img src={loaderGif} alt="Loading..." />
+        <Image src="/assets/loader.gif" alt="Loading..." />
       </div>
     );
   }

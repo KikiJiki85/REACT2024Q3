@@ -4,11 +4,11 @@ import SearchPage from '../../../../App';
 
 const DetailsPage = () => {
   const router = useRouter();
-  const { id } = router.query;
+  const { id, page } = router.query;
 
   return (
     <div>
-      <SearchPage />
+      <SearchPage page={page} />
       <ItemDetails id={id} />;
     </div>
   );

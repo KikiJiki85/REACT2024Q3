@@ -50,7 +50,7 @@ const mockResults: Character[] = [
 ];
 
 describe('SearchResult Component', () => {
-  let store: MockStoreEnhanced<Partial<RootState>, {}>;
+  let store: MockStoreEnhanced<Partial<RootState>, object>;
   let mockDispatch: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {

@@ -1,8 +1,12 @@
 {
-  "extends": "react-app",
+  "parser": "@typescript-eslint/parser",
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "next/core-web-vitals"
+  ],
+  "plugins": ["@typescript-eslint"],
   "rules": {
-    "@typescript-eslint/no-explicit-any": "error",
-    "react-compiler/react-compiler": "error"
-  },
-  "plugins": ["react-compiler"]
+    "@typescript-eslint/no-explicit-any": "error"
+  }
 }

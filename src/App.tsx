@@ -10,18 +10,19 @@ import { useTheme } from './components/ThemeContext/ThemeContext';
 import styles from './App.module.css';
 import ItemDetails from './components/ItemDetails/ItemDetails';
 
-const SearchPage: React.FC = () => {
+interface SearchPageProps {
+  page: string | string[] | undefined;
+}
+
+const SearchPage: React.FC<SearchPageProps> = ({ page }) => {
   const router = useRouter();
-  const { page, id } = router.query;
   const { theme, toggleTheme } = useTheme();
   const [currentPage, setCurrentPage] = useState<number>(
     parseInt((page as string) ?? '1'),
   );
   const [searchTerm, setSearchTermAndSave] = useSearchTerm('');
   const [detailsOpen, setDetailsOpen] = useState<boolean>(false);
-  const [selectedItemId, setSelectedItemId] = useState<string | null>(
-    (id as string) || null,
-  );
+  const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
 
   const { data, isLoading, error } = useGetCharactersQuery({
     searchTerm,
@@ -38,10 +39,6 @@ const SearchPage: React.FC = () => {
     setCurrentPage(parseInt(page as string));
   }, [page, router]);
 
-  useEffect(() => {
-    setSelectedItemId((id as string) || null);
-  }, [id]);
-
   const handleSearch = (term: string) => {
     const trimmedTerm = term.trim();
     setSearchTermAndSave(trimmedTerm);
@@ -55,10 +52,13 @@ const SearchPage: React.FC = () => {
   };
 
   const handleItemClick = (id: string) => {
-    router.push(`/search/${currentPage}/details/${id}`);
+    setSelectedItemId(id);
+    setDetailsOpen(true);
   };
 
   const closeDetails = () => {
+    setDetailsOpen(false);
+    setSelectedItemId(null);
     router.push(`/search/${currentPage}`);
   };
 
@@ -91,7 +91,7 @@ const SearchPage: React.FC = () => {
             onPageChange={handlePageChange}
           />
         </div>
-        {selectedItemId && <ItemDetails id={selectedItemId} />}
+        {detailsOpen && selectedItemId && <ItemDetails id={selectedItemId} />}
       </div>
     </ErrorBoundary>
   );
