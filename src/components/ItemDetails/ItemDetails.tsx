@@ -8,9 +8,8 @@ interface ItemDetailsProps {
   id: string | string[] | undefined;
 }
 
-const ItemDetails: React.FC<ItemDetailsProps> = () => {
+const ItemDetails: React.FC<ItemDetailsProps> = ({ id }) => {
   const router = useRouter();
-  const { id } = router.query;
   const { data: details, isLoading } = useGetCharacterDetailsQuery(
     id as string,
   );
