@@ -1,10 +1,10 @@
 import React from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import { render } from '@testing-library/react';
-import { useRouter } from 'next/router';
-import Home from '../pages/index';
+import { useRouter } from 'next/navigation';
+import Home from '../../app/page';
 
-vi.mock('next/router', () => ({
+vi.mock('next/navigation', () => ({
   useRouter: vi.fn(),
 }));
 

@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
-import Custom404 from '../pages/404';
+import Custom404 from '../../app/not-found/page';
 
 describe('Custom404', () => {
   it('renders NotFound component', () => {
