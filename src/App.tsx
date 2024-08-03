@@ -19,7 +19,7 @@ interface SearchPageProps {
 const SearchPage: React.FC<SearchPageProps> = ({ page }) => {
   const router = useRouter();
   const { theme, toggleTheme } = useTheme();
-  const [currentPage, setCurrentPage] = useState<number>(parseInt(page));
+  const [currentPage, setCurrentPage] = useState<number>(parseInt(page, 10));
   const [searchTerm, setSearchTermAndSave] = useSearchTerm('');
   const [detailsOpen, setDetailsOpen] = useState<boolean>(false);
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
@@ -30,6 +30,10 @@ const SearchPage: React.FC<SearchPageProps> = ({ page }) => {
   });
 
   const totalPages = data ? Math.ceil(data.count / 10) : 0;
+
+  useEffect(() => {
+    setCurrentPage(parseInt(page, 10));
+  }, [page]);
 
   useEffect(() => {
     if (isNaN(currentPage)) {
@@ -90,7 +94,9 @@ const SearchPage: React.FC<SearchPageProps> = ({ page }) => {
             onPageChange={handlePageChange}
           />
         </div>
-        {detailsOpen && selectedItemId && <ItemDetails id={selectedItemId} />}
+        {detailsOpen && selectedItemId && (
+          <ItemDetails id={selectedItemId} closeDetails={() => closeDetails} />
+        )}
       </div>
     </ErrorBoundary>
   );
