@@ -1,4 +1,6 @@
-import { useRouter } from 'next/router';
+'use client';
+
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useGetCharactersQuery } from './api/apiSlice';
 import SearchBar from './components/SearchBar/SearchBar';
@@ -11,15 +13,13 @@ import styles from './App.module.css';
 import ItemDetails from './components/ItemDetails/ItemDetails';
 
 interface SearchPageProps {
-  page: string | string[] | undefined;
+  page: string;
 }
 
 const SearchPage: React.FC<SearchPageProps> = ({ page }) => {
   const router = useRouter();
   const { theme, toggleTheme } = useTheme();
-  const [currentPage, setCurrentPage] = useState<number>(
-    parseInt((page as string) ?? '1'),
-  );
+  const [currentPage, setCurrentPage] = useState<number>(parseInt(page));
   const [searchTerm, setSearchTermAndSave] = useSearchTerm('');
   const [detailsOpen, setDetailsOpen] = useState<boolean>(false);
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
@@ -32,12 +32,11 @@ const SearchPage: React.FC<SearchPageProps> = ({ page }) => {
   const totalPages = data ? Math.ceil(data.count / 10) : 0;
 
   useEffect(() => {
-    if (!page || isNaN(Number(page))) {
+    if (isNaN(currentPage)) {
       router.push('/not-found');
       return;
     }
-    setCurrentPage(parseInt(page as string));
-  }, [page, router]);
+  }, [currentPage, router]);
 
   const handleSearch = (term: string) => {
     const trimmedTerm = term.trim();

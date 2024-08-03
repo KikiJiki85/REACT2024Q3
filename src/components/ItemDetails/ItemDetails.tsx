@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { useGetCharacterDetailsQuery } from '../../api/apiSlice';
 import styles from './ItemDetails.module.css';
 import Image from 'next/image';

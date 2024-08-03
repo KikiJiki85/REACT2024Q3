@@ -1,3 +1,4 @@
+'use client';
 import { useEffect, useState, ChangeEvent } from 'react';
 import { SearchBarProps } from './types';
 import styles from './SearchBar.module.css';
