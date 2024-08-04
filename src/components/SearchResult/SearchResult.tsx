@@ -6,7 +6,7 @@ import {
 import { RootState } from '../../store';
 import { SearchResultProps } from './types';
 import styles from './SearchResult.module.css';
-import loaderGif from '../../assets/loader.gif';
+import Image from 'next/image';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { csvFormat } from 'd3-dsv';
 import { saveAs } from 'file-saver';
@@ -47,7 +47,12 @@ const SearchResult: React.FC<SearchResultProps> = ({
   if (isLoading) {
     return (
       <div className={styles['search-result__is-loading']}>
-        <img src={loaderGif} alt="Loading..." />
+        <Image
+          src="/assets/loader.gif"
+          alt="Loading..."
+          width={64}
+          height={64}
+        />
       </div>
     );
   }

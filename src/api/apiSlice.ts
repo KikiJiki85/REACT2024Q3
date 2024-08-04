@@ -46,12 +46,12 @@ export const apiSlice = createApi({
 export const useGetCharactersQuery = apiSlice.endpoints.getCharacters
   .useQuery as (arg: QueryArgGetCharacters) => {
   data: GetCharactersResponse | undefined;
-  error: FetchBaseQueryError | undefined;
   isLoading: boolean;
+  error: FetchBaseQueryError | undefined;
 };
+
 export const useGetCharacterDetailsQuery = apiSlice.endpoints
   .getCharacterDetails.useQuery as (arg: string) => {
   data: Character | undefined;
-  error: FetchBaseQueryError | undefined;
   isLoading: boolean;
 };

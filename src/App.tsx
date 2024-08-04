@@ -1,21 +1,28 @@
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate, Outlet } from 'react-router-dom';
 import { useGetCharactersQuery } from './api/apiSlice';
 import SearchBar from './components/SearchBar/SearchBar';
 import SearchResult from './components/SearchResult/SearchResult';
 import Pagination from './components/Pagination/Pagination';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 import useSearchTerm from './useSearchTerm';
-import styles from './App.module.css';
 import { useTheme } from './components/ThemeContext/ThemeContext';
+import styles from './App.module.css';
+import ItemDetails from './components/ItemDetails/ItemDetails';
 
-const App: React.FC = () => {
-  const { page, id } = useParams<{ page: string; id: string }>();
-  const navigate = useNavigate();
+interface SearchPageProps {
+  page: string | string[] | undefined;
+}
+
+const SearchPage: React.FC<SearchPageProps> = ({ page }) => {
+  const router = useRouter();
   const { theme, toggleTheme } = useTheme();
-  const [currentPage, setCurrentPage] = useState<number>(parseInt(page ?? '1'));
+  const [currentPage, setCurrentPage] = useState<number>(
+    parseInt((page as string) ?? '1'),
+  );
   const [searchTerm, setSearchTermAndSave] = useSearchTerm('');
   const [detailsOpen, setDetailsOpen] = useState<boolean>(false);
+  const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
 
   const { data, isLoading, error } = useGetCharactersQuery({
     searchTerm,
@@ -26,38 +33,33 @@ const App: React.FC = () => {
 
   useEffect(() => {
     if (!page || isNaN(Number(page))) {
-      navigate('/not-found');
+      router.push('/not-found');
       return;
     }
-    setCurrentPage(parseInt(page));
-  }, [page, navigate]);
-
-  useEffect(() => {
-    if (id) {
-      setDetailsOpen(true);
-    } else {
-      setDetailsOpen(false);
-    }
-  }, [id]);
+    setCurrentPage(parseInt(page as string));
+  }, [page, router]);
 
   const handleSearch = (term: string) => {
     const trimmedTerm = term.trim();
     setSearchTermAndSave(trimmedTerm);
     setCurrentPage(1);
-    navigate('/search/1');
+    router.push('/search/1');
   };
 
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
-    navigate(`/search/${newPage}`);
+    router.push(`/search/${newPage}`);
   };
 
   const handleItemClick = (id: string) => {
-    navigate(`/search/${currentPage}/details/${id}`);
+    setSelectedItemId(id);
+    setDetailsOpen(true);
   };
 
   const closeDetails = () => {
-    navigate(`/search/${currentPage}`);
+    setDetailsOpen(false);
+    setSelectedItemId(null);
+    router.push(`/search/${currentPage}`);
   };
 
   return (
@@ -89,10 +91,10 @@ const App: React.FC = () => {
             onPageChange={handlePageChange}
           />
         </div>
-        <Outlet context={{ closeDetails }} />
+        {detailsOpen && selectedItemId && <ItemDetails id={selectedItemId} />}
       </div>
     </ErrorBoundary>
   );
 };
 
-export default App;
+export default SearchPage;

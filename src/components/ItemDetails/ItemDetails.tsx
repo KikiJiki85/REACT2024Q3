@@ -1,31 +1,35 @@
 import { useEffect } from 'react';
-import { useParams, useOutletContext, useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { useGetCharacterDetailsQuery } from '../../api/apiSlice';
-import { OutletContext } from './types';
 import styles from './ItemDetails.module.css';
-import loaderGif from '../../assets/loader.gif';
+import Image from 'next/image';
 
-const ItemDetails: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
-  const { closeDetails } = useOutletContext<OutletContext>();
-  const { data: details, isLoading } = useGetCharacterDetailsQuery(id!);
-  const navigate = useNavigate();
+interface ItemDetailsProps {
+  id: string | string[] | undefined;
+}
+
+const ItemDetails: React.FC<ItemDetailsProps> = ({ id }) => {
+  const router = useRouter();
+  const { data: details, isLoading } = useGetCharacterDetailsQuery(
+    id as string,
+  );
 
   useEffect(() => {
     if (!id || isNaN(Number(id))) {
-      navigate('/not-found');
+      router.push('/not-found');
       return;
     }
-  }, [id, navigate]);
-
-  if (isLoading) {
-    console.log(isLoading);
-  }
+  }, [id, router]);
 
   if (isLoading) {
     return (
       <div className={styles['item-details']}>
-        <img src={loaderGif} alt="Loading..." />
+        <Image
+          src="/assets/loader.gif"
+          alt="Loading..."
+          width={64}
+          height={64}
+        />
       </div>
     );
   }
@@ -45,7 +49,10 @@ const ItemDetails: React.FC = () => {
           <li>Height: {details.height} </li>
           <li>Skin Color: {details.skin_color} </li>
         </ul>
-        <button onClick={closeDetails} className={styles['item-details__btn']}>
+        <button
+          onClick={() => router.back()}
+          className={styles['item-details__btn']}
+        >
           Close
         </button>
       </div>
