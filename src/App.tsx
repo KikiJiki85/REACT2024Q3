@@ -94,9 +94,7 @@ const SearchPage: React.FC<SearchPageProps> = ({ page }) => {
             onPageChange={handlePageChange}
           />
         </div>
-        {detailsOpen && selectedItemId && (
-          <ItemDetails id={selectedItemId} closeDetails={() => closeDetails} />
-        )}
+        {detailsOpen && selectedItemId && <ItemDetails id={selectedItemId} />}
       </div>
     </ErrorBoundary>
   );

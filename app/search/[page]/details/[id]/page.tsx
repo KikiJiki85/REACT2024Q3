@@ -8,7 +8,7 @@ import React from 'react';
 const DetailsPage = () => {
   const searchParams = useSearchParams();
   const id = searchParams.get('id');
-  const page = searchParams.get('page') || undefined;
+  const page = searchParams.get('page') || '1';
 
   return (
     <div>
