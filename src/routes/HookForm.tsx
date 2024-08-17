@@ -70,28 +70,34 @@ const HookForm: React.FC = () => {
     <form onSubmit={handleSubmit(onSubmit)}>
       <div>
         <label htmlFor="name">Name:</label>
-        <input {...register('name')} />
-        {errors.name && <p>{errors.name.message}</p>}
+        <input id="name" type="text" {...register('name')} />
+        {errors.name && <p className="error-message">{errors.name.message}</p>}
       </div>
       <div>
         <label htmlFor="age">Age:</label>
         <input type="number" {...register('age')} />
-        {errors.age && <p>{errors.age.message}</p>}
+        {errors.age && <p className="error-message">{errors.age.message}</p>}
       </div>
       <div>
         <label htmlFor="email">Email:</label>
-        <input {...register('email')} />
-        {errors.email && <p>{errors.email.message}</p>}
+        <input type="email" {...register('email')} />
+        {errors.email && (
+          <p className="error-message">{errors.email.message}</p>
+        )}
       </div>
       <div>
         <label htmlFor="password">Password:</label>
         <input type="password" {...register('password')} />
-        {errors.password && <p>{errors.password.message}</p>}
+        {errors.password && (
+          <p className="error-message">{errors.password.message}</p>
+        )}
       </div>
       <div>
         <label htmlFor="confirmPassword">Confirm password:</label>
         <input type="password" {...register('confirmPassword')} />
-        {errors.confirmPassword && <p>{errors.confirmPassword.message}</p>}
+        {errors.confirmPassword && (
+          <p className="error-message">{errors.confirmPassword.message}</p>
+        )}
       </div>
       <div>
         <label htmlFor="gender">Gender:</label>
@@ -99,14 +105,18 @@ const HookForm: React.FC = () => {
           <option value="male">Man</option>
           <option value="female">Woman</option>
         </select>
-        {errors.gender && <p>{errors.gender.message}</p>}
+        {errors.gender && (
+          <p className="error-message">{errors.gender.message}</p>
+        )}
       </div>
       <div>
         <label htmlFor="acceptTerms">
           <input type="checkbox" {...register('acceptTerms')} />
           Accept Terms and Conditions agreement
         </label>
-        {errors.acceptTerms && <p>{errors.acceptTerms.message}</p>}
+        {errors.acceptTerms && (
+          <p className="error-message">{errors.acceptTerms.message}</p>
+        )}
       </div>
       <div>
         <label htmlFor="picture">Upload picture:</label>
@@ -121,12 +131,16 @@ const HookForm: React.FC = () => {
             />
           )}
         />
-        {errors.picture && <p>{errors.picture.message}</p>}
+        {errors.picture && (
+          <p className="error-message">{errors.picture.message}</p>
+        )}
       </div>
       <div>
         <label htmlFor="country">Country:</label>
-        <input {...register('country')} />
-        {errors.country && <p>{errors.country.message}</p>}
+        <input type="text" {...register('country')} />
+        {errors.country && (
+          <p className="error-message">{errors.country.message}</p>
+        )}
       </div>
       <button type="submit">Submit</button>
     </form>
