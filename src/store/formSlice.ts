@@ -1,21 +1,32 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { FormData } from '../types.ts';
+import { FormData } from '../types';
 
 interface FormState {
-  [key: string]: FormData;
+  controlledFormData: FormData | null;
+  uncontrolledFormData: FormData | null;
 }
 
-const initialState: FormState = {};
+const initialState: FormState = {
+  controlledFormData: null,
+  uncontrolledFormData: null,
+};
 
 const formSlice = createSlice({
-  name: 'forms',
+  name: 'form',
   initialState,
   reducers: {
-    updateForm: (
+    updateForm(
       state,
-      action: PayloadAction<{ formType: string; data: FormData }>,
-    ) => {
-      state[action.payload.formType] = action.payload.data;
+      action: PayloadAction<{
+        formType: 'controlled' | 'uncontrolled';
+        data: FormData;
+      }>,
+    ) {
+      if (action.payload.formType === 'controlled') {
+        state.controlledFormData = action.payload.data;
+      } else {
+        state.uncontrolledFormData = action.payload.data;
+      }
     },
   },
 });

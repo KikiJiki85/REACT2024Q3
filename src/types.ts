@@ -3,8 +3,9 @@ export interface FormData {
   age: number;
   email: string;
   password: string;
+  confirmPassword: string;
   gender: string;
   acceptTerms: boolean;
-  picture: string | null;
+  picture: File | null;
   country: string;
 }

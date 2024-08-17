@@ -1,9 +1,14 @@
+// store.ts
+
 import { configureStore } from '@reduxjs/toolkit';
 import formReducer from './formSlice';
+
+const initialCountries: string[] = [];
 
 export const store = configureStore({
   reducer: {
     forms: formReducer,
+    countries: () => initialCountries,
   },
 });
 

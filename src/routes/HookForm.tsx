@@ -4,48 +4,48 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
-import { updateForm } from '../store/formSlice.ts';
-import { FormData } from '../types.ts';
+import { updateForm } from '../store/formSlice';
+import { FormData } from '../types';
 
 const validationSchema = Yup.object().shape({
   name: Yup.string()
-    .required('Имя обязательно')
-    .matches(/^[A-Z]/, 'Имя должно начинаться с заглавной буквы'),
+    .required('Name is required')
+    .matches(/^[A-Z]/, 'Name should start with the capital letter'),
   age: Yup.number()
-    .required('Возраст обязателен')
-    .positive('Возраст должен быть положительным')
-    .integer('Возраст должен быть числом'),
+    .required('Age is required')
+    .positive('Age must be positive')
+    .integer('Age should be a number'),
   email: Yup.string()
-    .required('Email обязателен')
-    .email('Введите корректный Email'),
+    .required('Email is required')
+    .email('Please enter correct Email'),
   password: Yup.string()
-    .required('Пароль обязателен')
+    .required('Password is required')
     .matches(
       /(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[@$!%*?&])/,
-      'Пароль должен содержать хотя бы одну цифру, заглавную и строчную буквы, специальный символ',
+      'Password should contain at least one number, one uppercased letter, one lowercased letter, and one special character',
     ),
   confirmPassword: Yup.string()
-    .oneOf([Yup.ref('password')], 'Пароли должны совпадать')
-    .required('Подтверждение пароля обязательно'),
-  gender: Yup.string().required('Пол обязателен'),
+    .oneOf([Yup.ref('password')], 'Passwords should match')
+    .required('You should confirm your password'),
+  gender: Yup.string().required('Gender is required'),
   acceptTerms: Yup.boolean().oneOf(
     [true],
-    'Необходимо принять условия и положения',
+    'You should accept terms and conditions',
   ),
   picture: Yup.mixed()
-    .required('Загрузите картинку')
+    .required('Please upload an image')
     .test(
       'fileSize',
-      'Размер картинки слишком велик',
-      value => !value || (value && value.size <= 1048576),
+      'File size is too big',
+      value => value && (value as File).size <= 1048576,
     )
     .test(
       'fileType',
-      'Неподдерживаемый формат',
+      'Unsupported format',
       value =>
-        !value || (value && ['image/jpeg', 'image/png'].includes(value.type)),
+        value && ['image/jpeg', 'image/png'].includes((value as File).type),
     ),
-  country: Yup.string().required('Страна обязательна'),
+  country: Yup.string().required('Country is required'),
 });
 
 const HookForm: React.FC = () => {
@@ -97,14 +97,14 @@ const HookForm: React.FC = () => {
         <label htmlFor="gender">Gender:</label>
         <select {...register('gender')}>
           <option value="male">Man</option>
-          <option value="female">Women</option>
+          <option value="female">Woman</option>
         </select>
         {errors.gender && <p>{errors.gender.message}</p>}
       </div>
       <div>
         <label htmlFor="acceptTerms">
           <input type="checkbox" {...register('acceptTerms')} />
-          accept Terms and Conditions agreement
+          Accept Terms and Conditions agreement
         </label>
         {errors.acceptTerms && <p>{errors.acceptTerms.message}</p>}
       </div>
@@ -116,7 +116,7 @@ const HookForm: React.FC = () => {
           render={({ field }) => (
             <input
               type="file"
-              onChange={e => field.onChange(e.target.files?.[0])}
+              onChange={e => field.onChange(e.target.files?.[0] || null)}
               accept=".png,.jpeg,.jpg"
             />
           )}
