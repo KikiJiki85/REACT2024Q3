@@ -26,11 +26,7 @@ const UncontrolledForm: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    let pictureBase64 = null;
-
-    if (pictureRef.current?.files?.[0]) {
-      pictureBase64 = await convertToBase64(pictureRef.current.files[0]);
-    }
+    const pictureFile = pictureRef.current?.files?.[0];
 
     const formData: FormData = {
       name: nameRef.current?.value || '',
@@ -40,13 +36,20 @@ const UncontrolledForm: React.FC = () => {
       confirmPassword: confirmPasswordRef.current?.value || '',
       gender: genderRef.current?.value || '',
       acceptTerms: acceptTermsRef.current?.checked || false,
-      picture: pictureBase64,
+      picture: pictureFile,
       country: countryRef.current?.value || '',
     };
 
     try {
       setIsSubmitting(true);
       await validationSchema.validate(formData, { abortEarly: false });
+
+      // После успешной валидации конвертируем картинку в base64
+      const pictureBase64 = pictureFile
+        ? await convertToBase64(pictureFile)
+        : null;
+      formData.picture = pictureBase64;
+
       setErrors({});
       dispatch(updateForm({ formType: 'uncontrolled', data: formData }));
       navigate('/');
