@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { updateForm } from '../store/formSlice';
 import { FormData } from '../types';
+import { convertToBase64, validationSchema } from '../utils';
 import * as Yup from 'yup';
 
 const UncontrolledForm: React.FC = () => {
@@ -22,22 +23,14 @@ const UncontrolledForm: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const validationSchema = Yup.object().shape({
-    name: Yup.string().required('Name is required'),
-    age: Yup.number().required('Age is required').positive().integer(),
-    email: Yup.string().required('Email is required').email(),
-    password: Yup.string().required('Password is required'),
-    confirmPassword: Yup.string()
-      .required('You should confirm your password')
-      .oneOf([Yup.ref('password')], 'Passwords should match'),
-    gender: Yup.string().required('Gender is required'),
-    acceptTerms: Yup.boolean().oneOf([true], 'You should accept terms'),
-    picture: Yup.mixed().required('Please upload an image'),
-    country: Yup.string().required('Country is required'),
-  });
-
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+
+    let pictureBase64 = null;
+
+    if (pictureRef.current?.files?.[0]) {
+      pictureBase64 = await convertToBase64(pictureRef.current.files[0]);
+    }
 
     const formData: FormData = {
       name: nameRef.current?.value || '',
@@ -47,7 +40,7 @@ const UncontrolledForm: React.FC = () => {
       confirmPassword: confirmPasswordRef.current?.value || '',
       gender: genderRef.current?.value || '',
       acceptTerms: acceptTermsRef.current?.checked || false,
-      picture: pictureRef.current?.files?.[0] || null,
+      picture: pictureBase64,
       country: countryRef.current?.value || '',
     };
 
@@ -58,13 +51,12 @@ const UncontrolledForm: React.FC = () => {
       dispatch(updateForm({ formType: 'uncontrolled', data: formData }));
       navigate('/');
     } catch (validationErrors) {
-      const validationErrorsMap = validationErrors.inner.reduce(
-        (acc: Partial<FormData>, curr: Yup.ValidationError) => {
-          acc[curr.path as keyof FormData] = curr.message || '';
-          return acc;
-        },
-        {},
-      );
+      const validationErrorsMap = (
+        validationErrors as Yup.ValidationError
+      ).inner.reduce((acc: Partial<FormData>, curr: Yup.ValidationError) => {
+        acc[curr.path as keyof FormData] = curr.message || '';
+        return acc;
+      }, {});
       setErrors(validationErrorsMap);
     } finally {
       setIsSubmitting(false);
@@ -75,35 +67,28 @@ const UncontrolledForm: React.FC = () => {
     <form onSubmit={handleSubmit}>
       <div>
         <label htmlFor="name">Name:</label>
-        <input type="text" id="name" ref={nameRef} required />
-        {errors.name && <p className="error-message">{errors.name}</p>}
+        <input type="text" id="name" ref={nameRef} />
+        <p className="error-message">{errors.name || <>&nbsp;</>}</p>
       </div>
       <div>
         <label htmlFor="age">Age:</label>
-        <input type="number" id="age" ref={ageRef} required />
-        {errors.age && <p className="error-message">{errors.age}</p>}
+        <input type="number" id="age" ref={ageRef} />
+        <p className="error-message">{errors.age || <>&nbsp;</>}</p>
       </div>
       <div>
         <label htmlFor="email">Email:</label>
-        <input type="email" id="email" ref={emailRef} required />
-        {errors.email && <p className="error-message">{errors.email}</p>}
+        <input type="email" id="email" ref={emailRef} />
+        <p className="error-message">{errors.email || <>&nbsp;</>}</p>
       </div>
       <div>
         <label htmlFor="password">Password:</label>
-        <input type="password" id="password" ref={passwordRef} required />
-        {errors.password && <p className="error-message">{errors.password}</p>}
+        <input type="password" id="password" ref={passwordRef} />
+        <p className="error-message">{errors.password || <>&nbsp;</>}</p>
       </div>
       <div>
         <label htmlFor="confirmPassword">Confirm password:</label>
-        <input
-          type="password"
-          id="confirmPassword"
-          ref={confirmPasswordRef}
-          required
-        />
-        {errors.confirmPassword && (
-          <p className="error-message">{errors.confirmPassword}</p>
-        )}
+        <input type="password" id="confirmPassword" ref={confirmPasswordRef} />
+        <p className="error-message">{errors.confirmPassword || <>&nbsp;</>}</p>
       </div>
       <div>
         <label htmlFor="gender">Gender:</label>
@@ -111,16 +96,14 @@ const UncontrolledForm: React.FC = () => {
           <option value="male">Man</option>
           <option value="female">Woman</option>
         </select>
-        {errors.gender && <p className="error-message">{errors.gender}</p>}
+        <p className="error-message">{errors.gender || <>&nbsp;</>}</p>
       </div>
       <div>
         <label htmlFor="acceptTerms">
           <input type="checkbox" id="acceptTerms" ref={acceptTermsRef} />
           Accept Terms and Conditions agreement
         </label>
-        {errors.acceptTerms && (
-          <p className="error-message">{errors.acceptTerms}</p>
-        )}
+        <p className="error-message">{errors.acceptTerms || <>&nbsp;</>}</p>
       </div>
       <div>
         <label htmlFor="picture">Upload picture:</label>
@@ -130,12 +113,12 @@ const UncontrolledForm: React.FC = () => {
           ref={pictureRef}
           accept=".png,.jpeg,.jpg"
         />
-        {errors.picture && <p className="error-message">{errors.picture}</p>}
+        <p className="error-message">{errors.picture || <>&nbsp;</>}</p>
       </div>
       <div>
         <label htmlFor="country">Country:</label>
-        <input type="text" id="country" ref={countryRef} required />
-        {errors.country && <p className="error-message">{errors.country}</p>}
+        <input type="text" id="country" ref={countryRef} />
+        <p className="error-message">{errors.country || <>&nbsp;</>}</p>
       </div>
 
       <button type="submit" disabled={isSubmitting}>
