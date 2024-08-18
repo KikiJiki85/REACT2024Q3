@@ -75,33 +75,37 @@ const HookForm: React.FC = () => {
       </div>
       <div>
         <label htmlFor="age">Age:</label>
-        <input type="number" {...register('age')} />
+        <input id="age" type="number" {...register('age')} />
         {errors.age && <p className="error-message">{errors.age.message}</p>}
       </div>
       <div>
         <label htmlFor="email">Email:</label>
-        <input type="email" {...register('email')} />
+        <input id="email" type="email" {...register('email')} />
         {errors.email && (
           <p className="error-message">{errors.email.message}</p>
         )}
       </div>
       <div>
         <label htmlFor="password">Password:</label>
-        <input type="password" {...register('password')} />
+        <input id="password" type="password" {...register('password')} />
         {errors.password && (
           <p className="error-message">{errors.password.message}</p>
         )}
       </div>
       <div>
         <label htmlFor="confirmPassword">Confirm password:</label>
-        <input type="password" {...register('confirmPassword')} />
+        <input
+          id="confirmPassword"
+          type="password"
+          {...register('confirmPassword')}
+        />
         {errors.confirmPassword && (
           <p className="error-message">{errors.confirmPassword.message}</p>
         )}
       </div>
       <div>
         <label htmlFor="gender">Gender:</label>
-        <select {...register('gender')}>
+        <select id="gender" {...register('gender')}>
           <option value="male">Man</option>
           <option value="female">Woman</option>
         </select>
@@ -111,7 +115,11 @@ const HookForm: React.FC = () => {
       </div>
       <div>
         <label htmlFor="acceptTerms">
-          <input type="checkbox" {...register('acceptTerms')} />
+          <input
+            id="acceptTerms"
+            type="checkbox"
+            {...register('acceptTerms')}
+          />
           Accept Terms and Conditions agreement
         </label>
         {errors.acceptTerms && (
@@ -137,7 +145,7 @@ const HookForm: React.FC = () => {
       </div>
       <div>
         <label htmlFor="country">Country:</label>
-        <input type="text" {...register('country')} />
+        <input id="country" type="text" {...register('country')} />
         {errors.country && (
           <p className="error-message">{errors.country.message}</p>
         )}

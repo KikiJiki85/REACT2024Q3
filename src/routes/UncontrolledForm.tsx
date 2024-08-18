@@ -116,7 +116,7 @@ const UncontrolledForm: React.FC = () => {
       <div>
         <label htmlFor="acceptTerms">
           <input type="checkbox" id="acceptTerms" ref={acceptTermsRef} />
-          Accept terms
+          Accept Terms and Conditions agreement
         </label>
         {errors.acceptTerms && (
           <p className="error-message">{errors.acceptTerms}</p>

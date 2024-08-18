@@ -4,6 +4,7 @@ import UncontrolledForm from './routes/UncontrolledForm';
 import ControlledForm from './routes/HookForm';
 import { useSelector } from 'react-redux';
 import { RootState } from './store/store';
+import { FormState } from './store/formSlice';
 
 const App: React.FC = () => {
   return (
@@ -33,7 +34,9 @@ const Home: React.FC = () => {
         {Object.keys(formData).map(key => (
           <div key={key}>
             <h3>{key}</h3>
-            <pre>{JSON.stringify(formData[key], null, 2)}</pre>
+            <pre>
+              {JSON.stringify(formData[key as keyof FormState], null, 2)}
+            </pre>
           </div>
         ))}
       </div>
