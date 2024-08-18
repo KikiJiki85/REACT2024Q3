@@ -26,7 +26,7 @@ const UncontrolledForm: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    const pictureFile = pictureRef.current?.files?.[0];
+    const pictureFile: File | null = pictureRef.current?.files?.[0] || null;
 
     const formData: FormData = {
       name: nameRef.current?.value || '',
@@ -44,7 +44,6 @@ const UncontrolledForm: React.FC = () => {
       setIsSubmitting(true);
       await validationSchema.validate(formData, { abortEarly: false });
 
-      // После успешной валидации конвертируем картинку в base64
       const pictureBase64 = pictureFile
         ? await convertToBase64(pictureFile)
         : null;
@@ -57,9 +56,10 @@ const UncontrolledForm: React.FC = () => {
       const validationErrorsMap = (
         validationErrors as Yup.ValidationError
       ).inner.reduce((acc: Partial<FormData>, curr: Yup.ValidationError) => {
-        acc[curr.path as keyof FormData] = curr.message || '';
+        acc[curr.path as keyof FormData] = curr.message || undefined;
         return acc;
       }, {});
+
       setErrors(validationErrorsMap);
     } finally {
       setIsSubmitting(false);
@@ -116,7 +116,9 @@ const UncontrolledForm: React.FC = () => {
           ref={pictureRef}
           accept=".png,.jpeg,.jpg"
         />
-        <p className="error-message">{errors.picture || <>&nbsp;</>}</p>
+        <p className="error-message">
+          {typeof errors.picture === 'string' ? errors.picture : <>&nbsp;</>}
+        </p>
       </div>
       <div>
         <label htmlFor="country">Country:</label>
