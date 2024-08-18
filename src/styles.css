@@ -8,7 +8,7 @@ form {
   padding: 15px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  max-width: 400px;
+  max-width: 600px;
 }
 
 form div {
@@ -45,8 +45,8 @@ button:disabled {
 
 .error-message {
   color: red;
-  font-size: 0.9em;
-  margin-top: 5px;
+  font-size: 0.7em;
+  min-height: 0.5em;
 }
 
 nav {

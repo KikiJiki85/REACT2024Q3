@@ -53,9 +53,11 @@ const HookForm: React.FC = () => {
     register,
     handleSubmit,
     control,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<FormData>({
     resolver: yupResolver(validationSchema),
+    mode: 'onChange',
+    reValidateMode: 'onChange',
   });
 
   const dispatch = useDispatch();
@@ -71,26 +73,30 @@ const HookForm: React.FC = () => {
       <div>
         <label htmlFor="name">Name:</label>
         <input id="name" type="text" {...register('name')} />
-        {errors.name && <p className="error-message">{errors.name.message}</p>}
+        <p className="error-message">
+          {errors.name ? errors.name.message : <span>&nbsp;</span>}
+        </p>
       </div>
       <div>
         <label htmlFor="age">Age:</label>
         <input id="age" type="number" {...register('age')} />
-        {errors.age && <p className="error-message">{errors.age.message}</p>}
+        <p className="error-message">
+          {errors.age ? errors.age.message : <span>&nbsp;</span>}
+        </p>
       </div>
       <div>
         <label htmlFor="email">Email:</label>
         <input id="email" type="email" {...register('email')} />
-        {errors.email && (
-          <p className="error-message">{errors.email.message}</p>
-        )}
+        <p className="error-message">
+          {errors.email ? errors.email.message : <span>&nbsp;</span>}
+        </p>
       </div>
       <div>
         <label htmlFor="password">Password:</label>
         <input id="password" type="password" {...register('password')} />
-        {errors.password && (
-          <p className="error-message">{errors.password.message}</p>
-        )}
+        <p className="error-message">
+          {errors.password ? errors.password.message : <span>&nbsp;</span>}
+        </p>
       </div>
       <div>
         <label htmlFor="confirmPassword">Confirm password:</label>
@@ -99,9 +105,13 @@ const HookForm: React.FC = () => {
           type="password"
           {...register('confirmPassword')}
         />
-        {errors.confirmPassword && (
-          <p className="error-message">{errors.confirmPassword.message}</p>
-        )}
+        <p className="error-message">
+          {errors.confirmPassword ? (
+            errors.confirmPassword.message
+          ) : (
+            <span>&nbsp;</span>
+          )}
+        </p>
       </div>
       <div>
         <label htmlFor="gender">Gender:</label>
@@ -109,9 +119,9 @@ const HookForm: React.FC = () => {
           <option value="male">Man</option>
           <option value="female">Woman</option>
         </select>
-        {errors.gender && (
-          <p className="error-message">{errors.gender.message}</p>
-        )}
+        <p className="error-message">
+          {errors.gender ? errors.gender.message : <span>&nbsp;</span>}
+        </p>
       </div>
       <div>
         <label htmlFor="acceptTerms">
@@ -122,9 +132,13 @@ const HookForm: React.FC = () => {
           />
           Accept Terms and Conditions agreement
         </label>
-        {errors.acceptTerms && (
-          <p className="error-message">{errors.acceptTerms.message}</p>
-        )}
+        <p className="error-message">
+          {errors.acceptTerms ? (
+            errors.acceptTerms.message
+          ) : (
+            <span>&nbsp;</span>
+          )}
+        </p>
       </div>
       <div>
         <label htmlFor="picture">Upload picture:</label>
@@ -139,18 +153,20 @@ const HookForm: React.FC = () => {
             />
           )}
         />
-        {errors.picture && (
-          <p className="error-message">{errors.picture.message}</p>
-        )}
+        <p className="error-message">
+          {errors.picture ? errors.picture.message : <span>&nbsp;</span>}
+        </p>
       </div>
       <div>
         <label htmlFor="country">Country:</label>
         <input id="country" type="text" {...register('country')} />
-        {errors.country && (
-          <p className="error-message">{errors.country.message}</p>
-        )}
+        <p className="error-message">
+          {errors.country ? errors.country.message : <span>&nbsp;</span>}
+        </p>
       </div>
-      <button type="submit">Submit</button>
+      <button type="submit" disabled={!isValid}>
+        Submit
+      </button>
     </form>
   );
 };
