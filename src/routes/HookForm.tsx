@@ -63,9 +63,24 @@ const HookForm: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const onSubmit = (data: FormData) => {
-    dispatch(updateForm({ formType: 'hook', data }));
+  const onSubmit = async (data: FormData) => {
+    if (data.picture instanceof File) {
+      const base64Image = await convertToBase64(data.picture);
+      data.picture = base64Image;
+    }
+    dispatch(updateForm({ formType: 'controlled', data }));
     navigate('/');
+  };
+
+  const convertToBase64 = (
+    file: File,
+  ): Promise<string | ArrayBuffer | null> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+    });
   };
 
   return (

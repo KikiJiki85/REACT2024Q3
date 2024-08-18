@@ -25,11 +25,12 @@ const App: React.FC = () => {
 
 const Home: React.FC = () => {
   const formData = useSelector((state: RootState) => state.forms);
+
   return (
     <div>
       <h1>Welcome to the Form App</h1>
       <p>Select a form to fill out.</p>
-      <div>
+      <div className="container">
         <h2>Form data:</h2>
         {Object.keys(formData).map(key => (
           <div key={key}>
@@ -37,6 +38,13 @@ const Home: React.FC = () => {
             <pre>
               {JSON.stringify(formData[key as keyof FormState], null, 2)}
             </pre>
+            {formData[key as keyof FormState]?.picture && (
+              <img
+                src={formData[key as keyof FormState]?.picture as string}
+                alt="Uploaded"
+                style={{ maxWidth: '200px', maxHeight: '200px' }}
+              />
+            )}
           </div>
         ))}
       </div>
